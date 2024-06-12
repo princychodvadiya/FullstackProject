@@ -69,7 +69,7 @@ function Home(props) {
             }
         }
     }
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getFacilities())
@@ -126,6 +126,7 @@ function Home(props) {
                 </div>
             </div>
             {/* Hero End */}
+
             {/* Featurs Section Start */}
             <div className="container-fluid featurs py-5">
                 <div className="container py-5">
