@@ -185,7 +185,8 @@ function Products(props) {
                                     <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
                                 ))}
                             </Select>
-                            {errors.category_id && touched.category_id ? errors.category_id : ''}
+                            {/* {errors.category_id && touched.category_id ? errors.category_id : ''} */}
+                            {errors.category_id && touched.category_id && <span style={{ color: "red" }}>{errors.category_id}</span>}
                         </FormControl>
 
                         <FormControl fullWidth margin="dense">
