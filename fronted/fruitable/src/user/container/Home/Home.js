@@ -82,7 +82,6 @@ function Home(props) {
         dispatch(getsubcategory());
     }, [dispatch]);
 
-
     const facilities = useSelector(state => state.facilities)
     console.log(facilities);
 
