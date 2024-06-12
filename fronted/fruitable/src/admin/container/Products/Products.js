@@ -18,10 +18,10 @@ function Products(props) {
     const [update, setUpdate] = useState(false);
     const [categoridata, setCategoridata] = useState([]);
     const [subcategoridata, setsubCategoridata] = useState([]);
-    const [selectsub, setselectsub] = useState([])
+    const [selectsub, setselectsub] = useState([]);
     const dispatch = useDispatch();
 
-    const product = useSelector(state => state.product.product);
+    const product = useSelector(state => state.product.product) || [];
     console.log(product);
 
     const getCategoryData = async () => {
@@ -92,21 +92,18 @@ function Products(props) {
 
     const { handleBlur, handleChange, handleSubmit, touched, errors, values, setValues, setFieldValue } = formik;
 
-
     const handlecategorichange = async (category_id) => {
-        // handleChange(event.target.value)
-        // console.log(event.target.value);
         const response = await fetch(`http://localhost:8000/api/v1/subcategories/get-subcategoryBycategory/${category_id}`)
         const data = await response.json();
-        console.log(data);
-        setselectsub(data.data)
-    }
+        setselectsub(data.data);
+    };
 
     const selectchange = (event) => {
-        setFieldValue("category_id", event.target.value)
-        handlecategorichange(event.target.value)
-        setFieldValue("subcategory_id", "")
-    }
+        setFieldValue("category_id", event.target.value);
+        handlecategorichange(event.target.value);
+        setFieldValue("subcategory_id", "");
+    };
+
     const handleDelete = (_id) => {
         dispatch(deleteproductdata(_id));
     };
@@ -165,122 +162,117 @@ function Products(props) {
 
     return (
         <>
-            {/* {product.isloading ? (
-                <HashLoader color="#2874ca" />
-            ) : product.error ? (
-                <p>{product.error}</p>
-            ) : ( */}
-            <>
-                <Button variant="outlined" onClick={handleClickOpen}>
-                    Add Product
-                </Button>
-                <br /><br />
-                <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle>Product</DialogTitle>
-                    <form onSubmit={handleSubmit}>
-                        <DialogContent>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel id="category_id-label">--select Category--</InputLabel>
-                                <Select
-                                    labelId="category_id-label"
-                                    id="category_id"
-                                    name="category_id"
-                                    value={values.category_id}
-                                    onChange={selectchange}
-                                    input={<OutlinedInput label="select category" />}
-                                    MenuProps={MenuProps}
-                                >
-                                    {categoridata.map((v) => (
-                                        <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
-                                    ))}
-                                </Select>
-                                {errors.category_id && touched.category_id ? errors.category_id : ''}
-                            </FormControl>
+            <Button variant="outlined" onClick={handleClickOpen}>
+                Add Product
+            </Button>
+            <br /><br />
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Product</DialogTitle>
+                <form onSubmit={handleSubmit}>
+                    <DialogContent>
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel id="category_id-label">--select Category--</InputLabel>
+                            <Select
+                                labelId="category_id-label"
+                                id="category_id"
+                                name="category_id"
+                                value={values.category_id}
+                                onChange={selectchange}
+                                input={<OutlinedInput label="select category" />}
+                                MenuProps={MenuProps}
+                            >
+                                {categoridata.map((v) => (
+                                    <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
+                                ))}
+                            </Select>
+                            {errors.category_id && touched.category_id ? errors.category_id : ''}
+                        </FormControl>
 
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel id="subcategory_id-label">--select Subcategory--</InputLabel>
-                                <Select
-                                    labelId="subcategory_id-label"
-                                    id="subcategory_id"
-                                    name="subcategory_id"
-                                    value={values.subcategory_id}
-                                    onChange={handleChange}
-                                    input={<OutlinedInput label="select subcategory" />}
-                                    MenuProps={MenuProps}
-                                >
-                                    {selectsub.map((v) => (
-                                        <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
-                                    ))}
-                                </Select>
-                                {errors.subcategory_id && touched.subcategory_id ? errors.subcategory_id : ''}
-                            </FormControl>
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel id="subcategory_id-label">--select Subcategory--</InputLabel>
+                            <Select
+                                labelId="subcategory_id-label"
+                                id="subcategory_id"
+                                name="subcategory_id"
+                                value={values.subcategory_id}
+                                onChange={handleChange}
+                                input={<OutlinedInput label="select subcategory" />}
+                                MenuProps={MenuProps}
+                            >
+                                {selectsub.map((v) => (
+                                    <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
+                                ))}
+                            </Select>
+                            {errors.subcategory_id && touched.subcategory_id ? errors.subcategory_id : ''}
+                        </FormControl>
 
-                            <TextField
-                                margin="dense"
-                                id="name"
-                                name="name"
-                                label="Product Name"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.name}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errors.name && touched.name}
-                                helperText={errors.name && touched.name ? errors.name : ''}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="description"
-                                name="description"
-                                label="Description"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.description}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errors.description && touched.description}
-                                helperText={errors.description && touched.description ? errors.description : ''}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="price"
-                                name="price"
-                                label="Price"
-                                type="number"
-                                fullWidth
-                                variant="standard"
-                                value={values.price}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errors.price && touched.price}
-                                helperText={errors.price && touched.price ? errors.price : ''}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="stock"
-                                name="stock"
-                                label="Stock"
-                                type="number"
-                                fullWidth
-                                variant="standard"
-                                value={values.stock}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errors.stock && touched.stock}
-                                helperText={errors.stock && touched.stock ? errors.stock : ''}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose}>Cancel</Button>
-                            <Button type="submit">{update ? "Update" : "Add"}</Button>
-                        </DialogActions>
-                    </form>
-                </Dialog>
+                        <TextField
+                            margin="dense"
+                            id="name"
+                            name="name"
+                            label="Product Name"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={values.name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.name && touched.name}
+                            helperText={errors.name && touched.name ? errors.name : ''}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="description"
+                            name="description"
+                            label="Description"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            value={values.description}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.description && touched.description}
+                            helperText={errors.description && touched.description ? errors.description : ''}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="price"
+                            name="price"
+                            label="Price"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                            value={values.price}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.price && touched.price}
+                            helperText={errors.price && touched.price ? errors.price : ''}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="stock"
+                            name="stock"
+                            label="Stock"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                            value={values.stock}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.stock && touched.stock}
+                            helperText={errors.stock && touched.stock ? errors.stock : ''}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button type="submit">{update ? "Update" : "Add"}</Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
+            {product.length > 0 ? (
                 <div style={{ height: 400, width: '100%' }}>
                     <DataGrid
-                        rows={product.product}
+                        rows={product}
                         columns={columns}
                         initialState={{
                             pagination: {
@@ -292,8 +284,9 @@ function Products(props) {
                         checkboxSelection
                     />
                 </div>
-            </>
-
+            ) : (
+                <p>No products available</p>
+            )}
         </>
     );
 }
