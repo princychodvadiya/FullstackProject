@@ -69,7 +69,6 @@ function Home(props) {
             }
         }
     }
-
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -78,7 +77,6 @@ function Home(props) {
 
     const facilities = useSelector(state => state.facilities)
     console.log(facilities);
-
 
     const themeContext = useContext(ThemeContext);
     console.log(themeContext);
@@ -101,7 +99,6 @@ function Home(props) {
                                 <input className="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search" />
                                 <button type="submit" className="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style={{ top: 0, right: '25%' }}>Submit Now</button>
                             </div>
-
                         </div>
                         <div className="col-md-12 col-lg-5">
                             <div id="carouselId" className="carousel slide position-relative" data-bs-ride="carousel">
@@ -148,7 +145,6 @@ function Home(props) {
                                 </div>
                             ))
                         }
-
                     </div>
                 </div>
             </div>
