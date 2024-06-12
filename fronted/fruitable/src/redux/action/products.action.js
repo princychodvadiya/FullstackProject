@@ -1,60 +1,66 @@
-import { ADD_PRODUCTS, DELETE_PRODUCTS, GET_PRODUCTS, UPDATE_PRODUCTS } from "../ActionType";
+import { ADD_PRODUCTS, DELETE_PRODUCTS, ERROR_PRODUCTS, GET_PRODUCTS, LOADING_PRODUCTS, UPDATE_PRODUCTS } from "../ActionType";
 
-export const getProducts = () => async (dispatch) => {
+const loadingproduct = () => ({ type: LOADING_PRODUCTS });
+
+const errorproduct = (error) => (
+    { type: ERROR_PRODUCTS, payload: error }
+);
+
+export const getdata = () => async (dispatch) => {
+
     try {
+        dispatch(loadingproduct());
         const response = await fetch("http://localhost:8000/api/v1/products/list-product");
         const data = await response.json();
-        console.log(data);
         dispatch({ type: GET_PRODUCTS, payload: data });
     } catch (error) {
-        console.error("Failed to fetch products:", error);
+        dispatch(errorproduct(error.message));
     }
-}
+};
 
-export const AddProduct = (product) => async (dispatch) => {
+export const addproductdata = (data) => async (dispatch) => {
+    console.log("addproductdataaddproductdataaddproductdata", data);
     try {
         const response = await fetch("http://localhost:8000/api/v1/products/add-product", {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(product)
+            body: JSON.stringify(data)
         });
-
-        const data = await response.json();
-        console.log(data);
-        dispatch({ type: ADD_PRODUCTS, payload: data });
+        const dataproduct = await response.json();
+        dispatch({ type: ADD_PRODUCTS, payload: dataproduct });
     } catch (error) {
-        console.error("Failed to add product:", error);
+        dispatch(errorproduct(error.message));
     }
-}
+};
 
-export const deleteProduct = (id) => async (dispatch) => {
+export const editproductdata = (data) => async (dispatch) => {
     try {
-        await fetch(`http://localhost:8000/api/v1/products/delete-product/${id}`, {
-            method: 'DELETE'
-        });
-        dispatch({ type: DELETE_PRODUCTS, payload: id });
-    } catch (error) {
-        console.error("Failed to delete product:", error);
-    }
-}
-
-export const updateProduct = (data) => async (dispatch) => {
-    try {
-        await fetch(`http://localhost:8000/api/v1/products/update-product/${data._id}`, {
+        const response = await fetch("http://localhost:8000/api/v1/products/update-product/" + data._id, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
-        dispatch({ type: UPDATE_PRODUCTS, payload: data });
+        const datapro = await response.json();
+        dispatch({ type: UPDATE_PRODUCTS, payload: datapro });
     } catch (error) {
-        console.error("Failed to update product:", error);
+        dispatch(errorproduct(error.message));
     }
-}
+};
 
+export const deleteproductdata = (_id) => async (dispatch) => {
+    try {
+        await fetch(`http://localhost:8000/api/v1/products/delete-product/${_id}`, {
+            method: 'DELETE'
+        });
+        dispatch({ type: DELETE_PRODUCTS, payload: _id });
+    } catch (error) {
+        dispatch(errorproduct(error.message));
+    }
+};
 
 // import axios from 'axios';
 // import { baseURL } from '../../utils/baseURL';

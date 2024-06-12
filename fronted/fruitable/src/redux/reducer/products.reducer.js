@@ -1,61 +1,58 @@
 import { ADD_PRODUCTS, DELETE_PRODUCTS, ERROR_PRODUCTS, GET_PRODUCTS, LOADING_PRODUCTS, UPDATE_PRODUCTS } from "../ActionType";
 
-export const initialState = {
-    isLoading: false,
-    products: [],
+const initialState = {
+    isloading: false,
+    product: [],
     error: null
-}
+};
 
-export const productsReducer = (state = initialState, action) => {
-    console.log(action);
-
+export const productReducer = (state = initialState, action) => {
+    console.log("productReducerproductReducerproductReducer", action.payload);
     switch (action.type) {
         case LOADING_PRODUCTS:
             return {
-                isLoading: true,
-                products: [],
-                error: null
-            }
-        case ERROR_PRODUCTS:
-            return {
                 ...state,
-                isLoading: false,
-                error: action.payload
-            }
+                isloading: true
+            };
         case GET_PRODUCTS:
             return {
                 ...state,
-                isLoading: false,
-                products: action.payload.data,
+                isloading: false,
+                product: action.payload.data,
                 error: null
-            }
+            };
         case ADD_PRODUCTS:
             return {
                 isLoading: false,
-                products: state.products.concat(action.payload.data),
+                product: state.product.concat(action.payload.data),
                 error: null
-            }
-
-        case DELETE_PRODUCTS:
-            return {
-                isLoading: false,
-                products: state.products.filter((v) => v._id !== action.payload),
-                error: null
-            }
-
-
+            };
         case UPDATE_PRODUCTS:
             return {
+                ...state,
                 isLoading: false,
-                products: state.products.map((v) => {
+                product: state.product.map((v) => {
                     if (v._id === action.payload._id) {
                         return action.payload
+                    } else {
+                        return v;
                     }
-                    return v
-                }),
+                })
+            };
+        case DELETE_PRODUCTS:
+            return {
+                ...state,
+                product: state.product.filter((v) => v._id !== action.payload),
+                isloading: false,
                 error: null
-            }
+            };
+        case ERROR_PRODUCTS:
+            return {
+                ...state,
+                isloading: false,
+                error: action.payload
+            };
         default:
-            return state
+            return state;
     }
-}
+};

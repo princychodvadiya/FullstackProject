@@ -48,7 +48,7 @@ function Shop(props) {
     }
 
     useEffect(() => {
-        dispatch(getProducts());
+        dispatch(getdata());
     }, []);
 
     return (

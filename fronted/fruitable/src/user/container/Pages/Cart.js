@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../../redux/action/products.action';
+import { getProducts, getdata } from '../../../redux/action/products.action';
 import { Decrement_cart, Icrement_cart, Remove_cartData } from '../../../redux/reducer/slice/cart.silce';
 import { object, string } from 'yup';
 import { useFormik } from 'formik';
@@ -19,7 +19,7 @@ function Cart(props) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getProducts())
+        dispatch(getdata())
         dispatch(GetCoupon())
     }, [])
 
@@ -243,4 +243,3 @@ function Cart(props) {
 
 export default Cart;
 
-//context api

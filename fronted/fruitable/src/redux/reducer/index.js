@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
 import { counterReducer } from "./counter.reducer";
 import { facilitiesReducer } from "./facilities.reducer";
-import { productsReducer } from "./products.reducer";
 import { shopReducer } from "./shop.reducer";
 import { reviewReducer } from "./review.rducer";
 import counterSlice from "./slice/counter.slice";
@@ -9,11 +8,12 @@ import cartSlice from "./slice/cart.silce";
 import couponSlice from "./slice/coupon.slice";
 import { categoryReducer } from "./category.reducer";
 import subcategorySlice from "./slice/subcategory.slice";
+import { productReducer } from "./products.reducer";
 
 export const rootReducer = combineReducers({
     counter: counterReducer,
     facilities: facilitiesReducer,
-    products: productsReducer,
+    product: productReducer,
     shop: shopReducer,
     review: reviewReducer,
     counter_slice: counterSlice,
