@@ -54,7 +54,7 @@ const addProduct = async (req, res) => {
         const product = await Products.create(req.body);
         console.log(product);
 
-        if (!category) {
+        if (!product) {
             res.status(400).json({
                 success: false,
                 message: 'product not created.'

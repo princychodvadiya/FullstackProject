@@ -21,8 +21,7 @@ function Products(props) {
     const [selectsub, setselectsub] = useState([])
     const dispatch = useDispatch();
 
-
-    const product = useSelector(state => state.product);
+    const product = useSelector(state => state.product.product);
     console.log(product);
 
     const getCategoryData = async () => {
@@ -44,7 +43,6 @@ function Products(props) {
             console.error(error);
         }
     };
-
 
     useEffect(() => {
         dispatch(getdata());
@@ -108,7 +106,6 @@ function Products(props) {
         setFieldValue("category_id", event.target.value)
         handlecategorichange(event.target.value)
         setFieldValue("subcategory_id", "")
-
     }
     const handleDelete = (_id) => {
         dispatch(deleteproductdata(_id));

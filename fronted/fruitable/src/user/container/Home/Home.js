@@ -83,6 +83,11 @@ function Home(props) {
     const themeContext = useContext(ThemeContext);
     console.log(themeContext);
 
+    const categories = useSelector(state => state.category.category);
+    const subcategories = useSelector(state => state.subcategory.subcategory);
+
+    console.log(categories, subcategories);
+
     return (
         <div >
             {/* Hero Start */}
