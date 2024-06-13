@@ -66,7 +66,11 @@ function Products(props) {
         name: yup.string().required("Name is required"),
         description: yup.string().required("Description is required"),
         price: yup.string().required("Price is required"),
-        stock: yup.number().required("Stock is required").positive().integer()
+        stock: yup.number().required("Stock is required").positive().integer(),
+        product_image: yup.string().required("Product image is required").matches(
+            /\.(jpg|jpeg|png)$/,
+            "Only JPG or PNG images are allowed"
+        ),
     });
 
     const formik = useFormik({
@@ -76,7 +80,8 @@ function Products(props) {
             name: '',
             description: '',
             price: '',
-            stock: ''
+            stock: '',
+            product_image: '',
         },
         validationSchema: productSchema,
         onSubmit: (values, { resetForm }) => {
@@ -132,6 +137,7 @@ function Products(props) {
         },
         { field: 'name', headerName: 'Name', width: 140 },
         { field: 'description', headerName: 'Description', width: 120 },
+        { field: 'product_image', headerName: 'product image', width: 120 },
         { field: 'price', headerName: 'Price', width: 90 },
         { field: 'stock', headerName: 'Stock', width: 90 },
         {
@@ -206,7 +212,6 @@ function Products(props) {
                             </Select>
                             {errors.subcategory_id && touched.subcategory_id ? errors.subcategory_id : ''}
                         </FormControl>
-
                         <TextField
                             margin="dense"
                             id="name"
@@ -234,6 +239,19 @@ function Products(props) {
                             onBlur={handleBlur}
                             error={errors.description && touched.description}
                             helperText={errors.description && touched.description ? errors.description : ''}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="product_image"
+                            name="product_image"
+                            type="file"
+                            fullWidth
+                            variant="standard"
+                            value={values.product_image}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.product_image && touched.product_image}
+                            helperText={errors.product_image && touched.product_image ? errors.product_image : ''}
                         />
                         <TextField
                             margin="dense"

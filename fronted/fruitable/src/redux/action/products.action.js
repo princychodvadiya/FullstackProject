@@ -7,7 +7,6 @@ const errorproduct = (error) => (
 );
 
 export const getdata = () => async (dispatch) => {
-
     try {
         dispatch(loadingproduct());
         const response = await fetch("http://localhost:8000/api/v1/products/list-product");
@@ -19,7 +18,6 @@ export const getdata = () => async (dispatch) => {
 };
 
 export const addproductdata = (data) => async (dispatch) => {
-    console.log("addproductdataaddproductdataaddproductdata", data);
     try {
         const response = await fetch("http://localhost:8000/api/v1/products/add-product", {
             method: 'POST',

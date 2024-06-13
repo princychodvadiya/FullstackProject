@@ -60,11 +60,11 @@ const addProduct = async (req, res) => {
     try {
         const product = await Products.create({
             ...req.body,
-            product_image:{
+            product_image: {
                 public_id: fileRes.public_id,
                 url: fileRes.url
             }
-            
+
         });
 
         if (!product) {
