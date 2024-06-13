@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
-import { Box , Button ,Menu,MenuItem} from '@mui/material'
+import { Box, Button, Menu, MenuItem } from '@mui/material'
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFacilities } from '../../../redux/action/facilities.action';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { getCategory } from '../../../redux/action/category.action';
 import { getsubcategory } from '../../../redux/reducer/slice/subcategory.slice';
+
+
 function Home(props) {
-
-
     let testimonialOption = {
         autoplay: true,
         smartSpeed: 2000,
@@ -74,7 +74,7 @@ function Home(props) {
             }
         }
     }
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getFacilities());
@@ -93,27 +93,26 @@ function Home(props) {
 
     console.log(categories, subcategories);
 
-    
-    const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
-    const [subcategoryAnchorEl, setSubcategoryAnchorEl] = useState(null);
+    const [category, setCategory] = useState(null);
+    const [subcategory, setSubcategory] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
 
     const handleCategoryClick = (event, category) => {
         setSelectedCategory(category);
-        setCategoryAnchorEl(event.currentTarget);
-        setSubcategoryAnchorEl(null);
+        setCategory(event.currentTarget);
+        setSubcategory(null);
         setSelectedSubcategory(null);
     };
 
     const handleSubcategoryClick = (event, subcategory) => {
         setSelectedSubcategory(subcategory);
-        setSubcategoryAnchorEl(event.currentTarget);
+        setSubcategory(event.currentTarget);
     };
 
     const handleClose = () => {
-        setCategoryAnchorEl(null);
-        setSubcategoryAnchorEl(null);
+        setCategory(null);
+        setSubcategory(null);
     };
 
     return (
@@ -171,8 +170,8 @@ function Home(props) {
                             </Button>
                             <Menu
                                 id="category-menu"
-                                anchorEl={categoryAnchorEl}
-                                open={selectedCategory === category && Boolean(categoryAnchorEl)}
+                                anchorEl={category}
+                                open={selectedCategory === category && Boolean(category)}
                                 onClose={handleClose}
                             >
                                 {subcategories
@@ -189,8 +188,8 @@ function Home(props) {
                             {selectedCategory === category && (
                                 <Menu
                                     id="subcategory-menu"
-                                    anchorEl={subcategoryAnchorEl}
-                                    open={Boolean(subcategoryAnchorEl)}
+                                    anchorEl={subcategory}
+                                    open={Boolean(selectedSubcategory)}
                                     onClose={handleClose}
                                 >
                                     {/* {products

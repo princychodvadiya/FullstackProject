@@ -1,4 +1,5 @@
 const Products = require("../model/produts.model");
+const uploadFile = require("../utils/cloudinary");
 
 const listProducts = async (req, res) => {
     try {
@@ -50,9 +51,21 @@ const getProduct = async (req, res) => {
 }
 
 const addProduct = async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
+
+    const fileRes = await uploadFile(req.file.path, "Product");
+    console.log(fileRes);
+
     try {
-        const product = await Products.create(req.body);
-        console.log(product);
+        const product = await Products.create({
+            ...req.body,
+            product_image:{
+                public_id: fileRes.public_id,
+                url: fileRes.url
+            }
+            
+        });
 
         if (!product) {
             res.status(400).json({
