@@ -67,10 +67,16 @@ function Products(props) {
         description: yup.string().required("Description is required"),
         price: yup.string().required("Price is required"),
         stock: yup.number().required("Stock is required").positive().integer(),
-        product_image: yup.string().required("Product image is required").matches(
-            /\.(jpg|jpeg|png)$/,
-            "Only JPG or PNG images are allowed"
-        ),
+        product_image: yup.mixed()
+            .required("Please select an image")
+            .test("fileSize", "The file is too large", (value) => {
+                return value && value.size <= 2 * 1024 * 1024; // 2MB
+            })
+            .test("fileType", "Unsupported File Format", (value) => {
+                return (
+                    value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+                );
+            }),
     });
 
     const formik = useFormik({
@@ -85,10 +91,12 @@ function Products(props) {
         },
         validationSchema: productSchema,
         onSubmit: (values, { resetForm }) => {
+            console.log(values);
             if (update) {
                 dispatch(editproductdata(values));
             } else {
                 dispatch(addproductdata(values));
+                // console.log(values);
             }
             resetForm();
             handleClose();
@@ -96,6 +104,7 @@ function Products(props) {
     });
 
     const { handleBlur, handleChange, handleSubmit, touched, errors, values, setValues, setFieldValue } = formik;
+    console.log(errors);
 
     const handlecategorichange = async (category_id) => {
         const response = await fetch(`http://localhost:8000/api/v1/subcategories/get-subcategoryBycategory/${category_id}`)
@@ -137,7 +146,14 @@ function Products(props) {
         },
         { field: 'name', headerName: 'Name', width: 140 },
         { field: 'description', headerName: 'Description', width: 120 },
-        { field: 'product_image', headerName: 'product image', width: 120 },
+        {
+            field: "product_image",
+            headerName: "Image",
+            width: 150,
+            renderCell: ({ row }) => (
+                <img src={row.product_image} width="50" height="50" />
+            ),
+        },
         { field: 'price', headerName: 'Price', width: 90 },
         { field: 'stock', headerName: 'Stock', width: 90 },
         {
@@ -174,7 +190,7 @@ function Products(props) {
             <br /><br />
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Product</DialogTitle>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} method="post" enctype="multipart/form-data" >
                     <DialogContent>
                         <FormControl fullWidth margin="dense">
                             <InputLabel id="category_id-label">--select Category--</InputLabel>
@@ -212,6 +228,23 @@ function Products(props) {
                             </Select>
                             {errors.subcategory_id && touched.subcategory_id ? errors.subcategory_id : ''}
                         </FormControl>
+                        <input
+                            id="product_image"
+                            name="product_image"
+                            label="product_image"
+                            type="file"
+                            fullWidth
+                            variant="standard"
+                            onChange={(event) => {
+                                setFieldValue("product_image", event.currentTarget.files[0]);
+                            }}
+                            onBlur={handleBlur}
+
+                            sx={{ marginBottom: 2 }}
+                        />
+                        <br></br><br></br>
+                        {errors.product_image && touched.product_image ? <span style={{ color: "red" }}>{errors.product_image}</span> : null}
+
                         <TextField
                             margin="dense"
                             id="name"
@@ -240,19 +273,7 @@ function Products(props) {
                             error={errors.description && touched.description}
                             helperText={errors.description && touched.description ? errors.description : ''}
                         />
-                        <TextField
-                            margin="dense"
-                            id="product_image"
-                            name="product_image"
-                            type="file"
-                            fullWidth
-                            variant="standard"
-                            value={values.product_image}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errors.product_image && touched.product_image}
-                            helperText={errors.product_image && touched.product_image ? errors.product_image : ''}
-                        />
+
                         <TextField
                             margin="dense"
                             id="price"

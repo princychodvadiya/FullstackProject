@@ -1,4 +1,5 @@
 import { ADD_PRODUCTS, DELETE_PRODUCTS, ERROR_PRODUCTS, GET_PRODUCTS, LOADING_PRODUCTS, UPDATE_PRODUCTS } from "../ActionType";
+import axios from "axios";
 
 const loadingproduct = () => ({ type: LOADING_PRODUCTS });
 
@@ -17,17 +18,15 @@ export const getdata = () => async (dispatch) => {
     }
 };
 
-export const addproductdata = (data) => async (dispatch) => {
+export const addproductdata = (product) => async (dispatch) => {
     try {
-        const response = await fetch("http://localhost:8000/api/v1/products/add-product", {
-            method: 'POST',
+        const response = await axios.post("http://localhost:8000/api/v1/products/add-product", product, {
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+                'Content-Type': 'multipart/form-data'
+            }
         });
-        const dataproduct = await response.json();
-        dispatch({ type: ADD_PRODUCTS, payload: dataproduct });
+        // const dataproduct = await response.json();
+        dispatch({ type: ADD_PRODUCTS, payload: response.data.data });
     } catch (error) {
         dispatch(errorproduct(error.message));
     }

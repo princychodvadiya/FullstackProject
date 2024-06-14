@@ -56,9 +56,9 @@ const addProduct = async (req, res) => {
 
     const fileRes = await uploadFile(req.file.path, "Product");
     console.log(fileRes);
-
+    
     try {
-        const product = await Products.create({
+        const product = await Products.create({ 
             ...req.body,
             product_image: {
                 public_id: fileRes.public_id,
