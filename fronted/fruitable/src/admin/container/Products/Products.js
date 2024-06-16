@@ -91,12 +91,12 @@ function Products(props) {
         },
         validationSchema: productSchema,
         onSubmit: (values, { resetForm }) => {
-            console.log(values);
             if (update) {
                 dispatch(editproductdata(values));
+                console.log(values);
             } else {
                 dispatch(addproductdata(values));
-                // console.log(values);
+
             }
             resetForm();
             handleClose();
@@ -150,9 +150,14 @@ function Products(props) {
             field: "product_image",
             headerName: "Image",
             width: 150,
-            renderCell: ({ row }) => (
-                <img src={row.product_image} width="50" height="50" />
-            ),
+            renderCell: (params) => {
+                if (params.row.product_image && params.row.product_image.url) {
+                    return <img src={params.row.product_image.url
+                    } alt={params.row.name} width={50} />;
+                } else {
+                    return null;
+                }
+            },
         },
         { field: 'price', headerName: 'Price', width: 90 },
         { field: 'stock', headerName: 'Stock', width: 90 },
@@ -319,7 +324,7 @@ function Products(props) {
                                 paginationModel: { page: 0, pageSize: 5 },
                             },
                         }}
-                        getRowId={row => row._id}
+                        getRowId={(row) => row._id}
                         pageSizeOptions={[5, 10]}
                         checkboxSelection
                     />
