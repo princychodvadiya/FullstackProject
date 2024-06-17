@@ -34,8 +34,8 @@ function Header(props) {
     console.log(products);
     console.log(categories);
 
-    const [categoryAnchorEl, setCategoryAnchorEl] = useState('');
-    const [subcategoryAnchorEl, setSubcategoryAnchorEl] = useState('');
+    const [categoryData, setCategoryData] = useState('');
+    const [subcategoryData, setSubcategoryData] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
@@ -48,17 +48,17 @@ function Header(props) {
 
     const handleCategoryClick = (event, category) => {
         setSelectedCategory(category);
-        setCategoryAnchorEl(event.currentTarget);
+        setCategoryData(event.currentTarget);
     };
 
     const handleSubcategoryClick = (event, subcategory) => {
         setSelectedSubcategory(subcategory);
-        setSubcategoryAnchorEl(event.currentTarget);
+        setSubcategoryData(event.currentTarget);
     };
 
     const handleClose = () => {
-        setCategoryAnchorEl(null);
-        setSubcategoryAnchorEl(null);
+        setCategoryData(null);
+        setSubcategoryData(null);
     };
 
     return (
@@ -143,52 +143,91 @@ function Header(props) {
             </div>
             {/* Modal Search End */}
             <br /><br /><br /><br /><br /><br />
-            <br />
-            <div>
-                <Box sx={{ display: 'flex', padding: 2 }}>
+            <div className="container topbar d-none d-lg-block">
+                <Box sx={{ display: 'flex', padding: '0 10px' }}>
+
                     {categories.map(category => (
                         <Box key={category.id} sx={{ margin: '0 10px' }}>
                             <Button
                                 aria-controls="category-menu"
-                                onClick={(e) => handleCategoryClick(e, category)}
+                                onClick={(value) => handleCategoryClick(value, category)}
                             >
-                                {category.name}
+                                <a href="#" className="btn  rounded-pill px-3 text-primary">{category.name}</a>
                             </Button>
-                            <Menu
-                                id="category-menu"
-                                anchorEl={categoryAnchorEl}
-                                open={selectedCategory === category && Boolean(categoryAnchorEl)}
-                                onClose={handleClose}
-                            >
-                                {subcategories
-                                    .filter(subcategory => subcategory.category_id === category._id)
-                                    .map(subcategory => (
-                                        <MenuItem
-                                            key={subcategory.id}
-                                            onClick={(e) => handleSubcategoryClick(e, subcategory)}
-                                        >
-                                            {subcategory.name}
-                                        </MenuItem>
-                                    ))}
-                            </Menu>
+                            <div className="nav-item dropdown">
+
+                                <Menu
+                                    id="category-menu"
+                                    anchorEl={categoryData}
+                                    open={selectedCategory === category && Boolean(categoryData)}
+                                    onClose={handleClose}
+                                >
+
+                                    {subcategories
+                                        .filter(subcategory => subcategory.category_id === selectedCategory._id)
+                                        .map(subcategory => (
+                                            <MenuItem
+                                                key={subcategory.id}
+                                                onClick={(e) => handleSubcategoryClick(e, subcategory)}
+                                            >
+                                                {subcategory.name}
+                                            </MenuItem>
+                                        ))}
+                                </Menu>
+                            </div>
                         </Box>
                     ))}
                 </Box>
                 {selectedCategory && selectedSubcategory && (
                     <Box sx={{ margin: '20px 10px' }}>
-                        <h3>{selectedSubcategory.name}</h3>
-                        {products
-                            .filter(product => product.subcategory_id === selectedSubcategory._id)
-                            .map(product => (
-                                <Box key={product._id} sx={{ margin: '10px 0' }}>
-                                    <h4>{product.name}</h4>
-                                </Box>
-                            ))}
+                        <div className="col-lg-4 text-start">
+                            <h1>{selectedSubcategory.name}</h1>
+                        </div>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                            {products.product
+                                .filter(v => v.subcategory_id === selectedSubcategory._id)
+                                .map(v => (
+                                    <Box
+                                        key={v._id}
+                                        sx={{
+                                            width: '18rem',
+                                            margin: '10px',
+                                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                                            transition: 'transform 0.2s',
+                                            '&:hover': {
+                                                transform: 'scale(1.05)',
+                                            },
+                                        }}
+                                    >
+                                        {/* <div className="col-md-6 col-lg-4 col-xl-3"> */}
+                                        <div className="rounded position-relative fruite-item">
+                                            <div className="fruite-img">
+                                                <img
+                                                    src={v.product_image.url}
+                                                    alt={v.name}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '200px',
+                                                        objectFit: 'cover',
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="text-white bg-secondary px-3 py-1 rounded position-absolute" style={{ top: 10, left: 10 }}>{v.name}</div>
+                                        <div className="p-4 border border-secondary border-top-0 rounded-bottom"><h4>{v.name}</h4>
+                                            <p>{v.description}</p>
+                                            <div className="d-flex justify-content-between flex-lg-wrap"><p className="text-dark fs-5 fw-bold mb-0">Price: ${v.price}</p>
+                                                <a href="#" className="btn border border-secondary rounded-pill px-3 text-primary"><i className="fa fa-shopping-bag me-2 text-primary" />ADD PRODUCT</a>
+                                            </div>
+                                            {/* </div> */}
+                                        </div>
+                                    </Box>
+                                ))}
+                        </Box>
                     </Box>
                 )}
             </div>
         </div>
-
     );
 }
 
