@@ -96,7 +96,6 @@ function Products(props) {
                 console.log(values);
             } else {
                 dispatch(addproductdata(values));
-
             }
             resetForm();
             handleClose();
@@ -215,7 +214,6 @@ function Products(props) {
                             {/* {errors.category_id && touched.category_id ? errors.category_id : ''} */}
                             {errors.category_id && touched.category_id && <span style={{ color: "red" }}>{errors.category_id}</span>}
                         </FormControl>
-
                         <FormControl fullWidth margin="dense">
                             <InputLabel id="subcategory_id-label">--select Subcategory--</InputLabel>
                             <Select
@@ -324,6 +322,7 @@ function Products(props) {
                                 paginationModel: { page: 0, pageSize: 5 },
                             },
                         }}
+                        // getRowId={(row) => row._id}
                         getRowId={(row) => row._id}
                         pageSizeOptions={[5, 10]}
                         checkboxSelection

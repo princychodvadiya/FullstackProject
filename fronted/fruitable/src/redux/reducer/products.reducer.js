@@ -7,6 +7,7 @@ const initialState = {
 };
 
 export const productReducer = (state = initialState, action) => {
+    console.log(action.payload);
     switch (action.type) {
         case LOADING_PRODUCTS:
             return {
@@ -23,7 +24,7 @@ export const productReducer = (state = initialState, action) => {
         case ADD_PRODUCTS:
             return {
                 isLoading: false,
-                product: state.product.concat(action.payload.data),
+                product: state.product.concat(action.payload),
                 error: null
             };
         case UPDATE_PRODUCTS:

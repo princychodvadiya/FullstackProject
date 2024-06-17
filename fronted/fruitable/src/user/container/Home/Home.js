@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
-import { Box , Button ,Menu,MenuItem} from '@mui/material'
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFacilities } from '../../../redux/action/facilities.action';
 import { ThemeContext } from '../../../Context/ThemeContext';
-import { getCategory } from '../../../redux/action/category.action';
-import { getsubcategory } from '../../../redux/reducer/slice/subcategory.slice';
+
 function Home(props) {
-
-
     let testimonialOption = {
         autoplay: true,
         smartSpeed: 2000,
@@ -74,47 +70,19 @@ function Home(props) {
             }
         }
     }
-  const dispatch = useDispatch();
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getFacilities());
-        dispatch(getCategory());
-        dispatch(getsubcategory());
-    }, [dispatch]);
+        dispatch(getFacilities())
+    }, [])
 
     const facilities = useSelector(state => state.facilities)
     console.log(facilities);
 
+
     const themeContext = useContext(ThemeContext);
     console.log(themeContext);
-
-    const categories = useSelector(state => state.category.category);
-    const subcategories = useSelector(state => state.subcategory.subcategory);
-
-    console.log(categories, subcategories);
-
-    
-    const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
-    const [subcategoryAnchorEl, setSubcategoryAnchorEl] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [selectedSubcategory, setSelectedSubcategory] = useState(null);
-
-    const handleCategoryClick = (event, category) => {
-        setSelectedCategory(category);
-        setCategoryAnchorEl(event.currentTarget);
-        setSubcategoryAnchorEl(null);
-        setSelectedSubcategory(null);
-    };
-
-    const handleSubcategoryClick = (event, subcategory) => {
-        setSelectedSubcategory(subcategory);
-        setSubcategoryAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setCategoryAnchorEl(null);
-        setSubcategoryAnchorEl(null);
-    };
 
     return (
         <div >
@@ -129,6 +97,7 @@ function Home(props) {
                                 <input className="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search" />
                                 <button type="submit" className="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style={{ top: 0, right: '25%' }}>Submit Now</button>
                             </div>
+
                         </div>
                         <div className="col-md-12 col-lg-5">
                             <div id="carouselId" className="carousel slide position-relative" data-bs-ride="carousel">
@@ -156,57 +125,6 @@ function Home(props) {
                 </div>
             </div>
             {/* Hero End */}
-
-            <div>
-                <h2>Products</h2>
-                <Box sx={{ display: 'flex', padding: 2 }}>
-                    {categories.map(category => (
-                        <Box key={category.id} sx={{ margin: '0 10px' }}>
-                            <Button
-                                aria-controls="category-menu"
-                                aria-haspopup="true"
-                                onClick={(e) => handleCategoryClick(e, category)}
-                            >
-                                {category.name}
-                            </Button>
-                            <Menu
-                                id="category-menu"
-                                anchorEl={categoryAnchorEl}
-                                open={selectedCategory === category && Boolean(categoryAnchorEl)}
-                                onClose={handleClose}
-                            >
-                                {subcategories
-                                    .filter(subcategory => subcategory.categoryId === category.id)
-                                    .map(subcategory => (
-                                        <MenuItem
-                                            key={subcategory.id}
-                                            onClick={(e) => handleSubcategoryClick(e, subcategory)}
-                                        >
-                                            {subcategory.name}
-                                        </MenuItem>
-                                    ))}
-                            </Menu>
-                            {selectedCategory === category && (
-                                <Menu
-                                    id="subcategory-menu"
-                                    anchorEl={subcategoryAnchorEl}
-                                    open={Boolean(subcategoryAnchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    {/* {products
-                                        .filter(product => product.subcategoryId === selectedSubcategory?.id)
-                                        .map(product => (
-                                            <MenuItem key={product.id} onClick={handleClose}>
-                                                {product.name}
-                                            </MenuItem>
-                                        ))} */}
-                                </Menu>
-                            )}
-                        </Box>
-                    ))}
-                </Box>
-            </div>
-
             {/* Featurs Section Start */}
             <div className="container-fluid featurs py-5">
                 <div className="container py-5">
@@ -226,6 +144,7 @@ function Home(props) {
                                 </div>
                             ))
                         }
+
                     </div>
                 </div>
             </div>

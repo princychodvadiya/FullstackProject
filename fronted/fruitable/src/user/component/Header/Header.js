@@ -1,13 +1,15 @@
-import React, { useContext } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../../../Context/ThemeContext';
-import { IconButton } from '@mui/material';
+import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-
+import { getsubcategory } from '../../../redux/reducer/slice/subcategory.slice';
+import { getCategory } from '../../../redux/action/category.action';
+import { getdata } from '../../../redux/action/products.action';
 
 function Header(props) {
     const cart = useSelector(state => state.cart)
@@ -22,6 +24,42 @@ function Header(props) {
     const ChangeTheme = () => {
         themeContext.toggleTheme(themeContext.theme)
     }
+
+    const dispatch = useDispatch()
+
+    const products = useSelector(state => state.product);
+    const subcategories = useSelector(state => state.subcategory.subcategory);
+    const categories = useSelector(state => state.category.category);
+    console.log(subcategories);
+    console.log(products);
+    console.log(categories);
+
+    const [categoryAnchorEl, setCategoryAnchorEl] = useState('');
+    const [subcategoryAnchorEl, setSubcategoryAnchorEl] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedSubcategory, setSelectedSubcategory] = useState('');
+
+
+    useEffect(() => {
+        dispatch(getdata());
+        dispatch(getCategory());
+        dispatch(getsubcategory());
+    }, []);
+
+    const handleCategoryClick = (event, category) => {
+        setSelectedCategory(category);
+        setCategoryAnchorEl(event.currentTarget);
+    };
+
+    const handleSubcategoryClick = (event, subcategory) => {
+        setSelectedSubcategory(subcategory);
+        setSubcategoryAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setCategoryAnchorEl(null);
+        setSubcategoryAnchorEl(null);
+    };
 
     return (
         <div>
@@ -104,6 +142,51 @@ function Header(props) {
                 </div>
             </div>
             {/* Modal Search End */}
+            <br /><br /><br /><br /><br /><br />
+            <br />
+            <div>
+                <Box sx={{ display: 'flex', padding: 2 }}>
+                    {categories.map(category => (
+                        <Box key={category.id} sx={{ margin: '0 10px' }}>
+                            <Button
+                                aria-controls="category-menu"
+                                onClick={(e) => handleCategoryClick(e, category)}
+                            >
+                                {category.name}
+                            </Button>
+                            <Menu
+                                id="category-menu"
+                                anchorEl={categoryAnchorEl}
+                                open={selectedCategory === category && Boolean(categoryAnchorEl)}
+                                onClose={handleClose}
+                            >
+                                {subcategories
+                                    .filter(subcategory => subcategory.category_id === category._id)
+                                    .map(subcategory => (
+                                        <MenuItem
+                                            key={subcategory.id}
+                                            onClick={(e) => handleSubcategoryClick(e, subcategory)}
+                                        >
+                                            {subcategory.name}
+                                        </MenuItem>
+                                    ))}
+                            </Menu>
+                        </Box>
+                    ))}
+                </Box>
+                {selectedCategory && selectedSubcategory && (
+                    <Box sx={{ margin: '20px 10px' }}>
+                        <h3>{selectedSubcategory.name}</h3>
+                        {products
+                            .filter(product => product.subcategory_id === selectedSubcategory._id)
+                            .map(product => (
+                                <Box key={product._id} sx={{ margin: '10px 0' }}>
+                                    <h4>{product.name}</h4>
+                                </Box>
+                            ))}
+                    </Box>
+                )}
+            </div>
         </div>
 
     );
