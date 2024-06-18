@@ -22,7 +22,6 @@ function Products(props) {
     const dispatch = useDispatch();
 
     const product = useSelector(state => state.product.product) || [];
-    console.log(product);
 
     const getCategoryData = async () => {
         try {
@@ -99,7 +98,6 @@ function Products(props) {
         onSubmit: (values, { resetForm }) => {
             if (update) {
                 dispatch(editproductdata(values));
-                console.log(values);
             } else {
                 dispatch(addproductdata(values));
             }
@@ -247,7 +245,6 @@ function Products(props) {
                                 setFieldValue("product_image", event.currentTarget.files[0]);
                             }}
                             onBlur={handleBlur}
-
                             sx={{ marginBottom: 2 }}
                         />
                         <br></br><br></br>
@@ -255,6 +252,12 @@ function Products(props) {
                             values.product_image &&
                             <img src={values.product_image.url ? values.product_image.url : URL.createObjectURL(values.product_image)} width={50} />
                         }
+
+                        {/* {
+                            values.product_image && (
+                                <img src={typeof values.product_image.url === 'string' ? values.product_image.url : URL.createObjectURL(values.product_image)} width={50} alt="Product" />
+                            )} */}
+
                         {errors.product_image && touched.product_image ? <span style={{ color: "red" }}>{errors.product_image}</span> : null}
 
                         <TextField
