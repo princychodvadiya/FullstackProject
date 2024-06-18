@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFruits } from '../../../redux/action/shop.action'
 import { AddcartSlice } from '../../../redux/reducer/slice/cart.silce';
 import { getProducts } from '../../../redux/action/products.action';
+
 function Shop(props) {
 
     const [fruiteData, setfruiteData] = useState([]);

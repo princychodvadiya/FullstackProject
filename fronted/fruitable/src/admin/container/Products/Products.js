@@ -70,12 +70,18 @@ function Products(props) {
         product_image: yup.mixed()
             .required("Please select an image")
             .test("fileSize", "The file is too large", (value) => {
-                return value && value.size <= 2 * 1024 * 1024; // 2MB
+                if (value.size) {
+                    return value && value.size <= 1024 * 1024;
+                }
+                return true
             })
             .test("fileType", "Unsupported File Format", (value) => {
-                return (
-                    value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
-                );
+                if (value.type) {
+                    return (
+                        value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+                    );
+                }
+                return true
             }),
     });
 
@@ -103,7 +109,6 @@ function Products(props) {
     });
 
     const { handleBlur, handleChange, handleSubmit, touched, errors, values, setValues, setFieldValue } = formik;
-    console.log(errors);
 
     const handlecategorichange = async (category_id) => {
         const response = await fetch(`http://localhost:8000/api/v1/subcategories/get-subcategoryBycategory/${category_id}`)
@@ -246,6 +251,10 @@ function Products(props) {
                             sx={{ marginBottom: 2 }}
                         />
                         <br></br><br></br>
+                        {
+                            values.product_image &&
+                            <img src={values.product_image.url ? values.product_image.url : URL.createObjectURL(values.product_image)} width={50} />
+                        }
                         {errors.product_image && touched.product_image ? <span style={{ color: "red" }}>{errors.product_image}</span> : null}
 
                         <TextField

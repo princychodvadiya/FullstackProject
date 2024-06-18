@@ -21,6 +21,8 @@ export default function FormDialog() {
 
     const dispatch = useDispatch();
     const categories = useSelector(state => state.category);
+
+    
     const categoryList = categories.category || [];
 
     const handleClickOpen = () => {
