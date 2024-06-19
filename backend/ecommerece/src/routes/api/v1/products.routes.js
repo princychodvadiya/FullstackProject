@@ -22,6 +22,7 @@ router.post(
 
 router.put(
     '/update-product/:product_id',
+    upload.single('product_image'),
     controllerProducts.updateProduct
 )
 

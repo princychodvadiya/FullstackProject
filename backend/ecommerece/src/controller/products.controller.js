@@ -114,26 +114,88 @@ const deleteProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-    try {
-        const product = await Products.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators: true });
+    // console.log(req.params.product_id, req.body, req.file);
 
-        if (!product) {
-            res.status(400).json({
+    if (req.file) {
+        console.log("new Image.");
+
+        const fileRes = await uploadFile(req.file.path, "Product");
+        console.log(fileRes);
+
+        try {
+            const product = await Products.findByIdAndUpdate({
+                ...req.body,
+                product_image: {
+                    public_id: fileRes.public_id,
+                    url: fileRes.url
+                }
+            });
+
+            if (!product) {
+                res.status(400).json({
+                    success: false,
+                    message: 'product not created.'
+                })
+            }
+
+            res.status(201).json({
+                success: true,
+                message: 'product created successfully.',
+                data: product
+            })
+
+        } catch (error) {
+            res.status(500).json({
                 success: false,
-                message: 'product not updated.'
+                meassage: 'Internal Server Error.' + error.message
             })
         }
-        res.status(200).json({
-            success: true,
-            message: 'product updated successfully.',
-            data: product
-        })
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Internal Server Error.' + error.message
-        })
+    } else {
+        console.log("old image.");
+        try {
+            const product = await Products.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators: true });
+            console.log(product);
+
+
+            if (!product) {
+                res.status(400).json({
+                    success: false,
+                    message: 'product not updated.'
+                })
+            }
+            res.status(200).json({
+                success: true,
+                message: 'product updated successfully.',
+                data: product
+            })
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                meassage: 'Internal Server Error.' + error.message
+            })
+        }
+
     }
+    // try {
+    //     const product = await Products.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators: true });
+
+    //     if (!product) {
+    //         res.status(400).json({
+    //             success: false,
+    //             message: 'product not updated.'
+    //         })
+    //     }
+    //     res.status(200).json({
+    //         success: true,
+    //         message: 'product updated successfully.',
+    //         data: product
+    //     })
+    // } catch (error) {
+    //     res.status(500).json({
+    //         success: false,
+    //         message: 'Internal Server Error.' + error.message
+    //     })
+    // }
 }
 
 module.exports = {

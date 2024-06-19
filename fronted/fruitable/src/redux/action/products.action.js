@@ -32,36 +32,36 @@ export const addproductdata = (product) => async (dispatch) => {
     }
 };
 
-// export const editproductdata = (product) => async (dispatch) => {
-//     try {
-//         const response = await axios.put(`http://localhost:8000/api/v1/products/update-product/${product._id}`, product, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             },
-//         });
-//         dispatch({ type: UPDATE_PRODUCTS, payload: response.data.data });
-//     } catch (error) {
-//         // dispatch({ type: ERROR_PRODUCTS, payload: error.message });
-//         dispatch(errorproduct(error.message));
-//     }
-// };
-
-
-export const editproductdata = (data) => async (dispatch) => {
+export const editproductdata = (product) => async (dispatch) => {
     try {
-        const response = await fetch("http://localhost:8000/api/v1/products/update-product/" + data._id, {
-            method: 'PUT',
+        const response = await axios.put(`http://localhost:8000/api/v1/products/update-product/${product._id}`, product, {
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "multipart/form-data",
             },
-            body: JSON.stringify(data)
         });
-        const datapro = await response.json();
-        dispatch({ type: UPDATE_PRODUCTS, payload: datapro });
+        dispatch({ type: UPDATE_PRODUCTS, payload: response.data.data });
     } catch (error) {
+        // dispatch({ type: ERROR_PRODUCTS, payload: error.message });
         dispatch(errorproduct(error.message));
     }
 };
+
+
+// export const editproductdata = (data) => async (dispatch) => {
+//     try {
+//         const response = await fetch("http://localhost:8000/api/v1/products/update-product/" + data._id, {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(data)
+//         });
+//         const datapro = await response.json();
+//         dispatch({ type: UPDATE_PRODUCTS, payload: datapro });
+//     } catch (error) {
+//         dispatch(errorproduct(error.message));
+//     }
+// };
 
 export const deleteproductdata = (_id) => async (dispatch) => {
     try {

@@ -252,12 +252,6 @@ function Products(props) {
                             values.product_image &&
                             <img src={values.product_image.url ? values.product_image.url : URL.createObjectURL(values.product_image)} width={50} />
                         }
-
-                        {/* {
-                            values.product_image && (
-                                <img src={typeof values.product_image.url === 'string' ? values.product_image.url : URL.createObjectURL(values.product_image)} width={50} alt="Product" />
-                            )} */}
-
                         {errors.product_image && touched.product_image ? <span style={{ color: "red" }}>{errors.product_image}</span> : null}
 
                         <TextField
