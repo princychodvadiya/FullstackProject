@@ -123,7 +123,7 @@ const updateProduct = async (req, res) => {
         console.log(fileRes);
 
         try {
-            const product = await Products.findByIdAndUpdate({
+            const product = await Products.findByIdAndUpdate(req.params.product_id, { new: true, runValidators: true }, {
                 ...req.body,
                 product_image: {
                     public_id: fileRes.public_id,
