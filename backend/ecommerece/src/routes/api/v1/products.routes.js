@@ -31,5 +31,19 @@ router.delete(
     controllerProducts.deleteProduct
 )
 
+router.get(
+    '/count-categories',
+    controllerProducts.Countcategory
+)
+
+// router.get(
+//     '/out-of-stock',
+//     controllerProducts.outofstock
+// )
+
+router.get(
+    '/category',
+    controllerProducts.productByCategory
+)
 
 module.exports = router;

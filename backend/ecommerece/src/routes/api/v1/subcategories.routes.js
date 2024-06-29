@@ -32,4 +32,16 @@ router.get(
     controllerSubcategories.getSubcategoryByCtegory
 )
 
+router.get(
+    '/count-products',
+    controllerSubcategories.countProducts
+)
+
+router.get(
+    '/inactive',
+    controllerSubcategories.listOfSubcategory
+)
+
 module.exports = router;
+
+

@@ -27,5 +27,14 @@ router.delete(
     '/delete-category/:category_id',
     controllerCategories.deleteCategory
 )
+router.get(
+    '/getActive',
+    controllerCategories.countActive
+)
+
+router.get(
+    '/getInactive',
+    controllerCategories.countinActive
+)
 
 module.exports = router;    

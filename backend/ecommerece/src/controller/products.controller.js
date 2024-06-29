@@ -204,10 +204,89 @@ const updateProduct = async (req, res) => {
     // }
 }
 
+const Countcategory = async () => {
+    console.log("ok");
+
+    const Countcategory = await Products.aggregate(
+        [
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category_id",
+                    foreignField: "_id",
+                    as: "category"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$category",
+
+                }
+            },
+            {
+                $group: {
+                    _id: "$category_id",
+                    Category_name: { $first: "$category.name" },
+                    Product_name: { $first: "$name" },
+                    countproduct: {
+                        $sum: 1
+                    }
+                }
+            }
+        ]
+    )
+    console.log(Countcategory);
+}
+
+// const outofstock = async () => {
+//     console.log("ok");
+
+//     const outofstock = await Products.aggregate(
+
+//     )
+//     console.log(outofstock);
+// }
+
+const productByCategory = async () => {
+    console.log("ok");
+    const productByCategory = await Products.aggregate(
+        [
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "category_id",
+                    foreignField: "_id",
+                    as: "categories"
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    category: {
+                        $first: "$name"
+                    },
+                    ProdcutCount: {
+                        $sum: 1
+                    },
+                    product: {
+                        $push: "$categories.name"
+                    }
+                }
+            },
+            {
+                $unwind: "$product"
+            }
+        ]
+    )
+    console.log(productByCategory);
+}
 module.exports = {
     listProducts,
     getProduct,
     addProduct,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    Countcategory,
+    // outofstock,
+    productByCategory
 }

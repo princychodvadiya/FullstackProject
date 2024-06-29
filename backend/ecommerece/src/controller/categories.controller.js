@@ -122,10 +122,44 @@ const updateCategory = async (req, res) => {
     }
 
 }
+
+const countActive = async () => {
+    console.log("ok");
+    const category = await Categories.aggregate([
+        {
+            $match: {
+                "isActive": true
+            }
+        },
+        {
+            $count: 'ActiveCategory'
+        }
+    ]
+    )
+    console.log(category);
+}
+
+const countinActive = async () => {
+    console.log("ok");
+
+    const category = await Categories.aggregate(
+        [
+            {
+                $match: {
+                    "isActive": false
+                }
+            }
+        ]
+    )
+    console.log(category);
+}
+
 module.exports = {
     listCategories,
     getCategory,
     addCategory,
     deleteCategory,
-    updateCategory
+    updateCategory,
+    countActive,
+    countinActive
 }

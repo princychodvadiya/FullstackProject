@@ -126,7 +126,6 @@ const updateSubcategory = async (req, res) => {
 }
 
 const getSubcategoryByCtegory = async (req, res) => {
-
     try {
         const subcategories = await Subcategories.find({ category_id: req.params.category_id })
         console.log(subcategories);
@@ -148,7 +147,61 @@ const getSubcategoryByCtegory = async (req, res) => {
             message: 'Internal Server Error.' + error.message
         })
     }
+}
 
+const countProducts = async () => {
+    console.log("ok");
+
+    const subcategories = await Subcategories.aggregate(
+        [
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "_id",
+                    foreignField: "subcategory_id",
+                    as: "products"
+                }
+            }
+            ,
+            {
+                $unwind: {
+                    path: "$products",
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    subcategoryName: { $first: "$name" },
+                    CountProducts: {
+                        $sum: 1
+                    }
+                }
+            }
+        ]
+    )
+    console.log(subcategories);
+}
+
+const listOfSubcategory = async () => {
+    console.log("ok");
+
+    const listInacive = await Subcategories.aggregate(
+        [
+            {
+                $match: {
+                    "isActive": false
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    "isActive": 1,
+                    name: 1
+                }
+            }
+        ]
+    )
+    console.log(listInacive);
 }
 
 module.exports = {
@@ -157,5 +210,7 @@ module.exports = {
     addSubcategory,
     deleteSubcategory,
     updateSubcategory,
-    getSubcategoryByCtegory
+    getSubcategoryByCtegory,
+    countProducts,
+    listOfSubcategory
 }
