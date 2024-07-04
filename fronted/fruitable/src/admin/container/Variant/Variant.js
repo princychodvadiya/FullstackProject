@@ -10,17 +10,33 @@ import { useFormik } from 'formik';
 import { object } from 'yup';
 import * as yup from 'yup';
 import Products from '../Products/Products';
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
-import { useDispatch } from 'react-redux';
-
+import { FormControl, IconButton, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { getdata } from '../../../redux/action/products.action';
+import { getCategory } from '../../../redux/action/category.action';
+import { getsubcategory } from '../../../redux/reducer/slice/subcategory.slice';
+import { DataGrid } from '@mui/x-data-grid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { getVariantData, handleAdd, handleRemove, handleUpdateData } from '../../../redux/reducer/slice/variant.silce';
 function Variant(props) {
     const [open, setOpen] = React.useState(false);
-    const [selectsub, setselectsub] = useState([]);
-    const [categoridata, setCategoridata] = useState([]);
     const dispatch = useDispatch();
-    const [subcategoridata, setsubCategoridata] = useState([]);
-    const [product, setProduct] = useState([]);
-    const [selectproduct, setselectproduct] = useState([]);
+    const [update, setUpdate] = useState(false);
+    const [dynamicFields, setDynamicFields] = useState([]);
+
+    const products = useSelector(state => state.product.product);
+    const subcategories = useSelector(state => state.subcategory.subcategory);
+    const categories = useSelector(state => state.category.category);
+    const variant = useSelector(state => state.variants.variants);
+    console.log(variant);
+
+    useEffect(() => {
+        dispatch(getdata());
+        dispatch(getCategory());
+        dispatch(getsubcategory());
+        dispatch(getVariantData())
+    }, [dispatch]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -28,6 +44,8 @@ function Variant(props) {
 
     const handleClose = () => {
         setOpen(false);
+        formik.resetForm();
+        setDynamicFields([]);
     };
 
     let variantSchema = object({
@@ -36,21 +54,46 @@ function Variant(props) {
         product_id: yup.string().required("Product is required"),
         price: yup.string().required("Price is required"),
         quantity: yup.string().required(),
-        discount: yup.string().required()
+        discount: yup.string().required(),
+        name: yup.string().required("Name is required"),
+        description: yup.string().required("Description is required"),
     });
 
     const formik = useFormik({
         initialValues: {
             category_id: '',
             subcategory_id: '',
+            name: '',
             product_id: '',
             price: '',
             quantity: '',
             discount: '',
+            additionalFields: [],
+            description: '',
         },
         validationSchema: variantSchema,
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
+            const attributes = values.additionalFields.reduce((acc, field) => {
+                acc[field.key] = field.value;
+                console.log(acc);
+                console.log(field);
+                return acc;
+            });
 
+            console.log(attributes);
+
+            const variantData = {
+                ...values,
+                attributes,
+            };
+
+            if (update) {
+                dispatch(handleUpdateData(variantData));
+            } else {
+                dispatch(handleAdd(variantData));
+            }
+            resetForm();
+            handleClose();
         },
     });
 
@@ -65,60 +108,86 @@ function Variant(props) {
         },
     };
 
-
-
-    const getCategoryData = async () => {
-        try {
-            const response = await fetch("http://localhost:8000/api/v1/categories/list-categories");
-            const data = await response.json();
-            setCategoridata(data.data);
-        } catch (error) {
-            console.error(error);
-        }
+    const handleEdit = (data) => {
+        formik.setValues({
+            ...data,
+            additionalFields: Object.entries(data.attributes).map(([key, value]) => ({ key, value })),
+        });
+        setOpen(true);
+        setUpdate(true);
+        setDynamicFields(Object.entries(data.attributes).map(([key, value]) => ({ key, value })));
     };
 
-    const getSubcategoryData = async () => {
-        try {
-            const response = await fetch("http://localhost:8000/api/v1/subcategories/list-subcategories");
-            const data = await response.json();
-            setsubCategoridata(data.data);
-        } catch (error) {
-            console.error(error);
-        }
+    const handleDelete = (id) => {
+        dispatch(handleRemove(id));
     };
 
-    useEffect(() => {
-        getCategoryData();
-        getSubcategoryData();
-    }, [dispatch]);
-
-    const hendelCategoryChage = async (category_id) => {
-        const response = await fetch(`http://localhost:8000/api/v1/subcategories/get-subcategoryBycategory/${category_id}`)
-        const data = await response.json();
-        setselectproduct(data.data)
-    }
-
-    const selectchange = (event) => {
-        setFieldValue("category_id", event.target.value);
-        hendelCategoryChage(event.target.value);
-        setFieldValue("subcategory_id", "");
-        setFieldValue("product_id", '')
+    const addField = () => {
+        const newField = { key: '', value: '' };
+        setDynamicFields([...dynamicFields, newField]);
+        setFieldValue('additionalFields', [...dynamicFields, newField]);
     };
 
-
-    const handleProductChange = async (subcategory_id) => {
-        console.log("ok");
-        const response = await fetch(`http://localhost:8000/api/v1/products/get-ProductBySubcategory/${subcategory_id}`)
-        const data = await response.json();
-        // console.log(data);
-        setselectsub(data.data);
+    const removeField = (index) => {
+        const updatedFields = [...dynamicFields];
+        updatedFields.splice(index, 1);
+        setDynamicFields(updatedFields);
+        setFieldValue('additionalFields', updatedFields);
     };
 
-    const changPro = (event) => {
-        setFieldValue("subcategory_id", event.target.value);
-        handleProductChange(event.target.value);
-        setFieldValue("product_id", '')
-    }
+    const handleDynamicFieldChange = (index, field) => (e) => {
+        const updatedFields = [...dynamicFields];
+        updatedFields[index][field] = e.target.value;
+        setDynamicFields(updatedFields);
+        setFieldValue('additionalFields', updatedFields);
+    };
+    const columns = [
+        // { field: 'is_active', headerName: 'Active', width: 90, renderCell: (params) => (params.value ? 'Yes' : 'No') },
+        {
+            field: 'category_id', headerName: 'Category', width: 130,
+            renderCell: (params) => {
+                const category = categories.find((v) => v._id === params.row.category_id);
+                return category ? category.name : '';
+            }
+        },
+        {
+            field: 'subcategory_id', headerName: 'Subcategory', width: 130,
+            renderCell: (params) => {
+                const subcategory = subcategories.find((v) => v._id === params.row.subcategory_id);
+                return subcategory ? subcategory.name : '';
+            }
+        },
+        {
+            field: 'product_id', headerName: 'Product', width: 130,
+            renderCell: (params) => {
+                const product = products.find((v) => v._id === params.row.product_id);
+                return product ? product.name : '';
+            }
+        },
+        {
+            field: 'attributes', headerName: 'Attributes', width: 400,
+            renderCell: (params) => {
+                const attributes = params.row.attributes;
+                return attributes ? Object.entries(attributes).map(([key, value]) => `${key}: ${value}`).join(', ') : '';
+            }
+        },
+        {
+            field: 'Action',
+            headerName: 'Action',
+            width: 150,
+            renderCell: (params) => (
+                <>
+                    <IconButton aria-label="delete" onClick={() => handleDelete(params.row._id)}>
+                        <DeleteIcon />
+                    </IconButton>
+                    <IconButton aria-label="edit" onClick={() => handleEdit(params.row)}>
+                        <EditIcon />
+                    </IconButton>
+                </>
+            ),
+        },
+    ];
+
     return (
         <div>
             <React.Fragment>
@@ -133,57 +202,134 @@ function Variant(props) {
                     <DialogContent>
                         <form onSubmit={handleSubmit}>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel id="category_id-label">--select Category--</InputLabel>
+                                <InputLabel id="category-select-label">Category</InputLabel>
                                 <Select
-                                    labelId="category_id-label"
-                                    id="category_id"
+                                    labelId="category-select-label"
+                                    id="category-select"
                                     name="category_id"
                                     value={values.category_id}
-                                    onChange={selectchange}
-                                    input={<OutlinedInput label="select category" />}
-                                    MenuProps={MenuProps}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
                                 >
-                                    {categoridata.map((v) => (
-                                        <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
+                                    {categories.map((v) => (
+                                        <MenuItem key={v._id} value={v._id}>
+                                            {v.name}
+                                        </MenuItem>
                                     ))}
                                 </Select>
-                                {/* {errors.category_id && touched.category_id ? errors.category_id : ''} */}
-                                {errors.category_id && touched.category_id && <span style={{ color: "red" }}>{errors.category_id}</span>}
+                                {touched.category_id && errors.category_id ? (
+                                    <div>{errors.category_id}</div>
+                                ) : null}
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel id="subcategory_id-label">--select Subcategory--</InputLabel>
+                                <InputLabel id="subcategory-select-label">Subcategory</InputLabel>
                                 <Select
-                                    labelId="subcategory_id-label"
-                                    id="subcategory_id"
+                                    labelId="subcategory-select-label"
+                                    id="subcategory-select"
                                     name="subcategory_id"
                                     value={values.subcategory_id}
-                                    onChange={changPro}
-                                    input={<OutlinedInput label="select subcategory" />}
-                                    MenuProps={MenuProps}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
                                 >
-                                    {selectsub.map((v) => (
-                                        <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
-                                    ))}
+                                    {
+                                        subcategories.filter((v) => v.category_id === values.category_id)
+                                            .map((v) => (
+                                                <MenuItem key={v._id} value={v._id}>
+                                                    {v.name}
+                                                </MenuItem>
+                                            ))
+                                    }
                                 </Select>
-                                {errors.subcategory_id && touched.subcategory_id && <span style={{ color: "red" }}>{errors.subcategory_id}</span>}
+                                {touched.subcategory_id && errors.subcategory_id ? (
+                                    <div>{errors.subcategory_id}</div>
+                                ) : null}
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel id="product_id-label">--select product--</InputLabel>
+                                <InputLabel id="product-select-label">Product</InputLabel>
                                 <Select
-                                    labelId="product_id-label"
-                                    id="product_id"
+                                    labelId="product-select-label"
+                                    id="product-select"
                                     name="product_id"
                                     value={values.product_id}
                                     onChange={handleChange}
-                                    input={<OutlinedInput label="select product" />}
-                                    MenuProps={MenuProps}
+                                    onBlur={handleBlur}
                                 >
-                                    {product.map((v) => (
-                                        <MenuItem key={v._id} value={v._id}>{v.name}</MenuItem>
-                                    ))}
+                                    {
+                                        products.filter((v) => v.subcategory_id === values.subcategory_id)
+                                            .map((v) => (
+                                                <MenuItem key={v._id} value={v._id}>
+                                                    {v.name}
+                                                </MenuItem>
+                                            ))
+                                    }
                                 </Select>
-                                {errors.product_id && touched.product_id && <span style={{ color: "red" }}>{errors.product_id}</span>}
+                                {touched.product_id && errors.product_id ? (
+                                    <div>{errors.product_id}</div>
+                                ) : null}
                             </FormControl>
+                            <div>
+                                {dynamicFields.map((f, i) => (
+                                    <div key={i} >
+                                        <TextField
+                                            margin="dense"
+                                            id={`additionalFields[${i}].key`}
+                                            name={`additionalFields[${i}].key`}
+                                            label="Key"
+                                            type="text"
+                                            fullWidth
+                                            variant="standard"
+                                            onChange={handleDynamicFieldChange(i, 'key')}
+                                            value={f.key}
+                                        />
+                                        <TextField
+                                            margin="dense"
+                                            id={`additionalFields[${i}].value`}
+                                            name={`additionalFields[${i}].value`}
+                                            label="Value"
+                                            type="text"
+                                            fullWidth
+                                            variant="standard"
+                                            onChange={handleDynamicFieldChange(i, 'value')}
+                                            value={f.value}
+                                        />
+                                        <IconButton onClick={() => removeField(i)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </div>
+                                ))}
+                                <Button variant="outlined" onClick={addField}>
+                                    Add Field
+                                </Button>
+                            </div>
+
+                            <TextField
+                                margin="dense"
+                                id="name"
+                                name="name"
+                                label="name"
+                                type="name"
+                                fullWidth
+                                variant="standard"
+                                value={values.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.name && touched.name}
+                                helperText={errors.name && touched.name ? errors.name : ''}
+                            />
+                            <TextField
+                                margin="dense"
+                                id="description"
+                                name="description"
+                                label="description"
+                                type="description"
+                                fullWidth
+                                variant="standard"
+                                value={values.description}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.description && touched.description}
+                                helperText={errors.description && touched.description ? errors.description : ''}
+                            />
                             <TextField
                                 margin="dense"
                                 id="price"
@@ -228,13 +374,27 @@ function Variant(props) {
                             />
                             <DialogActions>
                                 <Button onClick={handleClose}>Cancel</Button>
-                                <Button type="submit">ADD</Button>
+                                <Button type="submit"> {update ? 'Update' : 'Add'}</Button>
                             </DialogActions>
                         </form>
                     </DialogContent>
-
                 </Dialog>
             </React.Fragment>
+            <div style={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    rows={variant}
+                    columns={columns}
+                    getRowId={(row) => row._id}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 5 },
+                        },
+                    }}
+                    pageSizeOptions={[5, 10]}
+                    checkboxSelection
+                />
+            </div>
+
         </div>
     );
 }

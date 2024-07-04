@@ -9,6 +9,7 @@ import couponSlice from "./slice/coupon.slice";
 import { categoryReducer } from "./category.reducer";
 import subcategorySlice from "./slice/subcategory.slice";
 import { productReducer } from "./products.reducer";
+import variantsSlice from "./slice/variant.silce";
 
 export const rootReducer = combineReducers({
     counter: counterReducer,
@@ -20,6 +21,6 @@ export const rootReducer = combineReducers({
     cart: cartSlice,
     coupon: couponSlice,
     category: categoryReducer,
-    subcategory: subcategorySlice
-
+    subcategory: subcategorySlice,
+    variants: variantsSlice
 })
