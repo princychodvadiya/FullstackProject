@@ -46,4 +46,9 @@ router.get(
     controllerProducts.productByCategory
 )
 
+router.get(
+    '/get-ProductBySubcategory/:subcategory_id',
+    controllerProducts.getProductBySubcategory
+)
+
 module.exports = router;

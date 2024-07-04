@@ -11,6 +11,7 @@ import Contect from '../admin/container/Contect/Contect';
 import Category from '../admin/container/Category/Category'
 import Subcatagory from '../admin/container/Subcategoty/Subcategoty';
 import Validation from '../admin/container/Validation/Validation';
+import Variant from '../admin/container/Variant/Variant';
 
 function AdminRoutes(props) {
     return (
@@ -25,6 +26,7 @@ function AdminRoutes(props) {
                 <Route exact path='/Contect' element={<Contect />} />
                 <Route exact path='/Subcategory' element={<Subcatagory />} />
                 <Route exact path='/Validation' element={<Validation />} />
+                <Route exact path='/Variant' element={<Variant />} />
             </Routes>
         </Layout>
     );

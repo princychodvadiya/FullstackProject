@@ -204,6 +204,29 @@ const updateProduct = async (req, res) => {
     // }
 }
 
+const getProductBySubcategory = async (req, res) => {
+    try {
+        const product = await Products.find({ product_id: req.params.product_id })
+        console.log(product);
+
+        if (!product) {
+            res.status(404).json({
+                success: false,
+                message: 'product not found.'
+            })
+        }
+        res.status(200).json({
+            success: true,
+            message: 'product fetch successfully.',
+            data: product
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error.' + error.message
+        })
+    }
+}
 const Countcategory = async () => {
     console.log("ok");
 
@@ -288,5 +311,6 @@ module.exports = {
     updateProduct,
     Countcategory,
     // outofstock,
-    productByCategory
+    productByCategory,
+    getProductBySubcategory
 }
