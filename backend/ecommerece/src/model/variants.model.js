@@ -4,19 +4,19 @@ const attributeSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true
+            // required: true
         },
         value: {
             type: String,
-            required: true
+            // required: true
         },
         price: {
             type: Number,
-            required: true
+            // required: true
         },
         stock: {
             type: Number,
-            required: true
+            // required: true
         }
     }
 )

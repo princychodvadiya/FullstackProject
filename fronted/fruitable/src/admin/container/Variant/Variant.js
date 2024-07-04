@@ -141,6 +141,7 @@ function Variant(props) {
         setDynamicFields(updatedFields);
         setFieldValue('additionalFields', updatedFields);
     };
+
     const columns = [
         // { field: 'is_active', headerName: 'Active', width: 90, renderCell: (params) => (params.value ? 'Yes' : 'No') },
         {
