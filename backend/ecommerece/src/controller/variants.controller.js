@@ -30,7 +30,7 @@ const listVariants = async (req, res) => {
         const variant = await Variants.find();
         console.log(variant);
 
-        if (!variant || variant.length === 0) {
+        if (!variant) {
             res.status(404).json({
                 success: false,
                 meassage: 'variant not found.'

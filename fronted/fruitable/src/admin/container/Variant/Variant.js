@@ -18,7 +18,10 @@ import { getsubcategory } from '../../../redux/reducer/slice/subcategory.slice';
 import { DataGrid } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { getVariantData, handleAdd, handleRemove, handleUpdateData } from '../../../redux/reducer/slice/variant.silce';
+
 function Variant(props) {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
@@ -27,9 +30,11 @@ function Variant(props) {
 
     const products = useSelector(state => state.product.product);
     const subcategories = useSelector(state => state.subcategory.subcategory);
+    console.log(subcategories);
     const categories = useSelector(state => state.category.category);
     const variant = useSelector(state => state.variants.variants);
     console.log(variant);
+    // const [dynamicFields, setDynamicFields] = useState(values.additionalFields || []);
 
     useEffect(() => {
         dispatch(getdata());
@@ -52,41 +57,40 @@ function Variant(props) {
         category_id: yup.string().required("Category is required"),
         subcategory_id: yup.string().required("Subcategory is required"),
         product_id: yup.string().required("Product is required"),
-        price: yup.string().required("Price is required"),
-        quantity: yup.string().required(),
-        discount: yup.string().required(),
-        name: yup.string().required("Name is required"),
-        description: yup.string().required("Description is required"),
+        // price: yup.string().required("Price is required"),
+        // quantity: yup.string().required(),
+        // discount: yup.string().required(),
+        // name: yup.string().required("Name is required"),
+        // description: yup.string().required("Description is required"),
+        // stock: yup.string().required()
+
     });
 
     const formik = useFormik({
         initialValues: {
             category_id: '',
             subcategory_id: '',
-            name: '',
+            // name: '',
             product_id: '',
             price: '',
-            quantity: '',
+            // quantity: '',
             discount: '',
             additionalFields: [],
-            description: '',
+            // description: '',
+            stock: ''
         },
         validationSchema: variantSchema,
         onSubmit: (values, { resetForm }) => {
             const attributes = values.additionalFields.reduce((acc, field) => {
                 acc[field.key] = field.value;
-                console.log(acc);
-                console.log(field);
                 return acc;
-            });
-
-            console.log(attributes);
+            }, {});
 
             const variantData = {
                 ...values,
                 attributes,
             };
-
+            console.log(variantData);
             if (update) {
                 dispatch(handleUpdateData(variantData));
             } else {
@@ -95,18 +99,10 @@ function Variant(props) {
             resetForm();
             handleClose();
         },
+
     });
 
     const { handleBlur, handleChange, handleSubmit, touched, errors, values, setValues, setFieldValue } = formik;
-
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: 224,
-                width: 250,
-            },
-        },
-    };
 
     const handleEdit = (data) => {
         formik.setValues({
@@ -117,6 +113,7 @@ function Variant(props) {
         setUpdate(true);
         setDynamicFields(Object.entries(data.attributes).map(([key, value]) => ({ key, value })));
     };
+
 
     const handleDelete = (id) => {
         dispatch(handleRemove(id));
@@ -166,12 +163,16 @@ function Variant(props) {
             }
         },
         {
-            field: 'attributes', headerName: 'Attributes', width: 400,
+            field: 'attributes', headerName: 'Attributes', width: 250,
             renderCell: (params) => {
                 const attributes = params.row.attributes;
                 return attributes ? Object.entries(attributes).map(([key, value]) => `${key}: ${value}`).join(', ') : '';
             }
         },
+        { field: 'price', headerName: 'price', width: 140 },
+        // { field: 'quantity', headerName: 'quantity', width: 140 },
+        { field: 'discount', headerName: 'discount', width: 100 },
+        { field: 'stock', headerName: 'stock', width: 100 },
         {
             field: 'Action',
             headerName: 'Action',
@@ -270,40 +271,51 @@ function Variant(props) {
                             </FormControl>
                             <div>
                                 {dynamicFields.map((f, i) => (
-                                    <div key={i} >
+                                    <div key={i}>
                                         <TextField
-                                            margin="dense"
-                                            id={`additionalFields[${i}].key`}
-                                            name={`additionalFields[${i}].key`}
+                                            style={{ marginRight: '8px' }}
+                                            id={`additionalFields[${i}]`.key}
+                                            name={`additionalFields[${i}]`.key}
                                             label="Key"
                                             type="text"
-                                            fullWidth
-                                            variant="standard"
                                             onChange={handleDynamicFieldChange(i, 'key')}
                                             value={f.key}
                                         />
                                         <TextField
-                                            margin="dense"
-                                            id={`additionalFields[${i}].value`}
-                                            name={`additionalFields[${i}].value`}
+                                            // id={`additionalFields[${i}].value`}
+                                            // name={`additionalFields[${i}].value`}
+                                            id={`additionalFields[${i}]`.value}
+                                            name={`additionalFields[${i}]`.value}
                                             label="Value"
                                             type="text"
-                                            fullWidth
-                                            variant="standard"
                                             onChange={handleDynamicFieldChange(i, 'value')}
                                             value={f.value}
+                                            style={{ marginRight: '8px' }}
                                         />
                                         <IconButton onClick={() => removeField(i)}>
-                                            <DeleteIcon />
+                                            <RemoveIcon />
                                         </IconButton>
                                     </div>
                                 ))}
-                                <Button variant="outlined" onClick={addField}>
+                                <Button variant="outlined" onClick={addField} startIcon={<AddIcon />}>
                                     Add Field
                                 </Button>
                             </div>
-
                             <TextField
+                                margin="dense"
+                                id="stock"
+                                name="stock"
+                                label="stock"
+                                type="stock"
+                                fullWidth
+                                variant="standard"
+                                value={values.stock}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.stock && touched.stock}
+                                helperText={errors.stock && touched.stock ? errors.stock : ''}
+                            />
+                            {/* <TextField
                                 margin="dense"
                                 id="name"
                                 name="name"
@@ -316,8 +328,8 @@ function Variant(props) {
                                 onBlur={handleBlur}
                                 error={errors.name && touched.name}
                                 helperText={errors.name && touched.name ? errors.name : ''}
-                            />
-                            <TextField
+                            />*/}
+                            {/* <TextField
                                 margin="dense"
                                 id="description"
                                 name="description"
@@ -330,7 +342,7 @@ function Variant(props) {
                                 onBlur={handleBlur}
                                 error={errors.description && touched.description}
                                 helperText={errors.description && touched.description ? errors.description : ''}
-                            />
+                            /> */}
                             <TextField
                                 margin="dense"
                                 id="price"
@@ -345,7 +357,7 @@ function Variant(props) {
                                 error={errors.price && touched.price}
                                 helperText={errors.price && touched.price ? errors.price : ''}
                             />
-                            <TextField
+                            {/* <TextField
                                 margin="dense"
                                 id="quantity"
                                 name="quantity"
@@ -358,7 +370,7 @@ function Variant(props) {
                                 onBlur={handleBlur}
                                 error={errors.quantity && touched.quantity}
                                 helperText={errors.quantity && touched.quantity ? errors.quantity : ''}
-                            />
+                            /> */}
                             <TextField
                                 margin="dense"
                                 id="discount"

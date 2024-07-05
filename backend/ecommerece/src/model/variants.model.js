@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 const attributeSchema = new mongoose.Schema(
     {
-        name: {
-            type: String,
-            // required: true
-        },
-        value: {
-            type: String,
-            // required: true
-        },
+        // name: {
+        //     type: String,
+        //     // required: true
+        // },
+        // value: {
+        //     type: String,
+        //     // required: true
+        // },
         price: {
             type: Number,
             // required: true
@@ -17,35 +17,36 @@ const attributeSchema = new mongoose.Schema(
         stock: {
             type: Number,
             // required: true
+        },
+        additionalFields: {
+            type: Object,
         }
     }
 )
 
 const variantsSchema = new mongoose.Schema(
     {
+        category_id: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Categories',
+            required: true
+        },
+        subcategory_id: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Subcategories',
+            required: true
+        },
         product_id: {
             type: mongoose.Types.ObjectId,
             ref: 'Products',
             required: true
         },
-        name: {
-            type: String,
-            required: true,
-            trim: true,
-            unique: true,
-            lowercase: true
-        },
-        description: {
-            type: String,
-            required: true,
-            trim: true
-        },
+        attributes: [attributeSchema],
         isActive: {
             type: Boolean,
             default: true,
             required: true
-        },
-        attributes: [attributeSchema],
+        }
     },
     {
         timestamps: true,
