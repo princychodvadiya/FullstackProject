@@ -27,7 +27,6 @@ function Variant(props) {
     const dispatch = useDispatch();
     const [update, setUpdate] = useState(false);
     const [dynamicFields, setDynamicFields] = useState([]);
-
     const products = useSelector(state => state.product.product);
     const subcategories = useSelector(state => state.subcategory.subcategory);
     console.log(subcategories);
@@ -63,6 +62,7 @@ function Variant(props) {
         // name: yup.string().required("Name is required"),
         // description: yup.string().required("Description is required"),
         // stock: yup.string().required()
+        variant_image: yup.string().required()
 
     });
 
@@ -77,7 +77,8 @@ function Variant(props) {
             discount: '',
             additionalFields: [],
             // description: '',
-            stock: ''
+            stock: '',
+            variant_image: ''
         },
         validationSchema: variantSchema,
         onSubmit: (values, { resetForm }) => {
@@ -173,6 +174,17 @@ function Variant(props) {
         // { field: 'quantity', headerName: 'quantity', width: 140 },
         { field: 'discount', headerName: 'discount', width: 100 },
         { field: 'stock', headerName: 'stock', width: 100 },
+        {
+            field: 'variant_image', headerName: 'variant Image', width: 200,
+            renderCell: (params) => {
+                if (params.row.variant_image && params.row.variant_image.url) {
+                    return <img src={params.row.variant_image.url
+                    } alt={params.row.name} width={50} />;
+                } else {
+                    return null;
+                }
+            },
+        },
         {
             field: 'Action',
             headerName: 'Action',
@@ -301,6 +313,26 @@ function Variant(props) {
                                     Add Field
                                 </Button>
                             </div>
+                            <input
+                                id="variant_image"
+                                name="variant_image"
+                                label="variant_image"
+                                type="file"
+                                fullWidth
+                                variant="standard"
+                                onChange={(event) => {
+                                    setFieldValue("variant_image", event.currentTarget.files[0]);
+                                }}
+                                onBlur={handleBlur}
+                                sx={{ marginBottom: 2 }}
+                            />
+                            <br></br><br></br>
+                            {
+                                values.variant_image &&
+                                <img src={values.variant_image.url ? values.variant_image.url : URL.createObjectURL(values.variant_image)} width={50} />
+                            }
+                            {errors.variant_image && touched.variant_image ? <span style={{ color: "red" }}>{errors.variant_image}</span> : null}
+
                             <TextField
                                 margin="dense"
                                 id="stock"

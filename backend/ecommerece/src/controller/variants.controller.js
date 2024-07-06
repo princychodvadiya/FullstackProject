@@ -52,6 +52,10 @@ const listVariants = async (req, res) => {
 
 
 const addVariant = async (req, res) => {
+    console.log("llllllllllllllll", req.body);
+    console.log(req.body);
+    console.log(req.file);
+
     try {
         const variant = await Variants.create(req.body);
 
@@ -74,6 +78,43 @@ const addVariant = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Internal Server Error.' + error.message
+        })
+    }
+}
+
+const addProduct = async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
+
+    const fileRes = await uploadFile(req.file.path, "Product");
+    console.log(fileRes);
+
+    try {
+        const product = await Products.create({
+            ...req.body,
+            product_image: {
+                public_id: fileRes.public_id,
+                url: fileRes.url
+            }
+        });
+
+        if (!product) {
+            res.status(400).json({
+                success: false,
+                message: 'product not created.'
+            })
+        }
+
+        res.status(201).json({
+            success: true,
+            message: 'product created successfully.',
+            data: product
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            meassage: 'Internal Server Error.' + error.message
         })
     }
 }
