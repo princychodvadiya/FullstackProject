@@ -21,6 +21,7 @@ router.post(
 )
 router.put(
     '/update-variant/:variant_id',
+    upload.single('variant_image'),
     controllerVariants.updateVariant
 )
 

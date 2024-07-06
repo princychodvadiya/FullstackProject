@@ -62,9 +62,24 @@ function Variant(props) {
         // name: yup.string().required("Name is required"),
         // description: yup.string().required("Description is required"),
         // stock: yup.string().required()
-        variant_image: yup.string().required()
-
+        variant_image: yup.mixed()
+            .required("Please select an image")
+            .test("fileSize", "The file is too large", (value) => {
+                if (value.size) {
+                    return value && value.size <= 1024 * 1024;
+                }
+                return true
+            })
+            .test("fileType", "Unsupported File Format", (value) => {
+                if (value.type) {
+                    return (
+                        value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+                    );
+                }
+                return true
+            }),
     });
+
 
     const formik = useFormik({
         initialValues: {

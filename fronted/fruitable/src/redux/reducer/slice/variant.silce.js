@@ -18,7 +18,11 @@ export const getVariantData = createAsyncThunk("variant/get", async () => {
 export const handleAdd = createAsyncThunk("variants/add", async (data) => {
     console.log(data);
     try {
-        const response = await axios.post("http://localhost:8000/api/v1/variants/add-variant", data);
+        const response = await axios.post("http://localhost:8000/api/v1/variants/add-variant", data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         const dataAdd = response.data.data;
         console.log(dataAdd);
         return dataAdd
@@ -28,18 +32,20 @@ export const handleAdd = createAsyncThunk("variants/add", async (data) => {
     }
 });
 
-
 export const handleUpdateData = createAsyncThunk("variants/edit", async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
-        await axios.put(`http://localhost:8000/api/v1/variants/update-variant/${data._id}`, data);
-        return data;
+        const response = await axios.put(`http://localhost:8000/api/v1/variants/update-variant/${data._id}`, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data.data;
     } catch (error) {
         console.error("Error adding variant:", error);
         throw error;
     }
-}
-);
+});
 
 export const handleRemove = createAsyncThunk("variants/delete", async (id) => {
     console.log(id);

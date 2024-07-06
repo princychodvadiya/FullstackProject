@@ -116,8 +116,6 @@ const deleteProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     // console.log(req.params.product_id, req.body, req.file);
-
-
     if (req.file) {
         console.log("New image.");
 
