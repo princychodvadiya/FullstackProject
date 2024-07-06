@@ -179,7 +179,7 @@ function Variant(props) {
             }
         },
         {
-            field: 'attributes', headerName: 'Attributes', width: 250,
+            field: 'attributes', headerName: 'Attributes', width: 400,
             renderCell: (params) => {
                 const attributes = params.row.attributes;
                 return attributes ? Object.entries(attributes).map(([key, value]) => `${key}: ${value}`).join(', ') : '';

@@ -87,5 +87,4 @@ const variantsSlice = createSlice({
     },
 });
 
-
 export default variantsSlice.reducer;
