@@ -1,0 +1,27 @@
+insert
+
+INSERT INTO employe(name,salary,JOD)
+VALUES('sanjana','40000', '24-9-8');
+------------------
+
+update
+
+UPDATE employe
+SET name="princy"
+WHERE id=2;
+----------------
+
+delete
+
+DELETE FROM employe WHERE id=3;
+
+---------------
+crate table
+
+CREATE TABLE employe1 ( 
+    id int, 
+    name varchar(255), 
+    salary varchar(255), 
+    Address varchar(255), 
+    City varchar(255) 
+)
