@@ -100,3 +100,67 @@ CREATE TABLE customer(
     snum INT(11),
     FOREIGN KEY (snum) REFERENCES `salespeople` (snum)
 );
+
+---insert query-----
+INSERT INTO customer(cnum,cname,city,rating,snum)
+VALUES('2002',"Giovanne","Rome","200","1003");
+
+INSERT INTO customer(cnum,cname,city,rating,snum)
+VALUES('2003',"Liu","San Jose","300","1002");
+
+INSERT INTO customer(cnum,cname,city,rating,snum)
+VALUES('2004',"Grass","Berlin","100","1002");
+
+INSERT INTO customer(cnum,cname,city,rating,snum)
+VALUES('2006',"Clemens","London","300","1007");
+
+INSERT INTO customer(cnum,cname,city,rating,snum)
+VALUES('2001',"Hoffman","London","100","1001");
+
+INSERT INTO customer(cnum,cname,city,rating,snum)
+VALUES('2007',"Pereira","Rome","100","1004");
+
+
+
+
+CREATE TABLE orders (
+    onum INT(11) AUTO_INCREMENT PRIMARY KEY,
+    amt DECIMAL(5,2),
+    odate VARCHAR(7),
+    cnum INT(11),
+    snum INT(11),
+    FOREIGN KEY (cnum) REFERENCES `customer` (cnum),
+    FOREIGN KEY (snum) REFERENCES `salespeople` (snum)
+);
+
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3001',"1800.96","10-MAR-94","2002","1002");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3002',"1900.1","10-MAR-94","2007","1003");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3009',"1713.23","10-APR-94","2002","1003");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3003',"767.19","10-MAR-94","2001","1001");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3005',"5160.45","10-MAR-94","2003","1002");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3007',"75.75","10-APR-94","2004","1002");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3008',"4723.95","10-MAY-94","2006","1001");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3010',"1309.95","10-JUN-94","2004","1002");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3011',"9891","10-JUN-94","2006","1001");
+
+INSERT INTO orders(onum,amt,odate,cnum,snum)
+VALUES('3012',"767.19","10-MAR-94","2001","1001");
+
