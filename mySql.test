@@ -2,20 +2,30 @@ insert
 
 INSERT INTO employe(name,salary,JOD)
 VALUES('sanjana','40000', '24-9-8');
-------------------
+
+INSERT INTO custmores(name,address,moblie_no)
+VALUES("janvi","surat","235645652")
+-------------------------------------------------------------------
 
 update
 
 UPDATE employe
 SET name="princy"
 WHERE id=2;
-----------------
+
+UPDATE custmores
+SET name='vidhi'
+WHERE id=1;
+----------------------------------------------------------------------
 
 delete
 
 DELETE FROM employe WHERE id=3;
 
----------------
+DELETE FROM custmores WHERE id=1;
+---------------------------------------------------------
+
+
 crate table
 
 CREATE TABLE employe1 ( 
@@ -25,3 +35,68 @@ CREATE TABLE employe1 (
     Address varchar(255), 
     City varchar(255) 
 )
+
+CREATE TABLE custmores(
+    id INT(11) AUTO_INCREMENT PRIMERY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    moblie_no VARCHAR (11) NOT NULL
+);
+----------------------------------------------------------
+
+------order------
+
+
+CREATE TABLE orders(
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  costomer_id INT(11) NOT NULL,
+  amount INT(11) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    FOREIGN KEY (costomer_id) REFERENCES `custmores` (id)
+);
+
+INSERT INTO orders(costomer_id,amount,status)
+VALUES("2","52000","Active");
+
+UPDATE orders
+SET amount = '3000'
+WHERE id=2;
+
+DELETE FROM orders WHERE id = 2;
+------------------------------
+
+
+CREATE TABLE salespeople(
+  snum INT(11) AUTO_INCREMENT PRIMARY KEY,
+  sname VARCHAR(255) NOT NULL,
+  city VARCHAR(255) DEFAULT 'surat',
+  comm DECIMAL(5,2)
+);
+
+---insert query-----
+INSERT INTO salespeople(snum,sname,city,comm)
+VALUES('1001',"Peel","London",".12");
+
+INSERT INTO salespeople(snum,sname,city,comm)
+VALUES('1004',"Motika","London",".11");
+
+INSERT INTO salespeople(snum,sname,city,comm)
+VALUES('1007',"Rifkin","Barcelona",".15");
+
+INSERT INTO salespeople(snum,sname,city,comm)
+VALUES('1002',"Serres","San Jose",".13");
+
+INSERT INTO salespeople(snum,sname,city,comm)
+VALUES('1003',"Axelord","New York",".1");
+
+
+
+
+CREATE TABLE customer(
+    cnum INT(11) AUTO_INCREMENT PRIMARY KEY,
+    cname VARCHAR(255) NOT NULL,
+    city VARCHAR(255),
+    rating INT(11),
+    snum INT(11),
+    FOREIGN KEY (snum) REFERENCES `salespeople` (snum)
+);
