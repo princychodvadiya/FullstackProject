@@ -164,3 +164,13 @@ VALUES('3011',"9891","10-JUN-94","2006","1001");
 INSERT INTO orders(onum,amt,odate,cnum,snum)
 VALUES('3012',"767.19","10-MAR-94","2001","1001");
 
+
+
+
+--left outer join----
+
+SELECT customer.cname,orders.onum
+FROM customer
+LEFT JOIN orders
+ON customer.cnum = orders.cnum
+ORDER BY customer.cname;
