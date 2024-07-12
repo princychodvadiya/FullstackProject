@@ -174,3 +174,10 @@ FROM customer
 LEFT JOIN orders
 ON customer.cnum = orders.cnum
 ORDER BY customer.cname;
+
+
+
+SELECT customer.cname,customer.cnum,salespeople.sname
+FROM customer
+LEFT JOIN salespeople
+ON customer.cname=salespeople.sname
