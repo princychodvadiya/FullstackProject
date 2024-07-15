@@ -8,4 +8,9 @@ router.get(
     controllerSalsepeople.listSalespeople
 )
 
+router.post(
+    '/add-salespeople',
+    controllerSalsepeople.AddSalespeople
+)
+
 module.exports = router;
