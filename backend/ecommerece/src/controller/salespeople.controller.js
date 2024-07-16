@@ -62,18 +62,20 @@ const UpdateSalespeople = async (req, res) => {
     try {
         const { snum } = req.params;
         const { sname, city, comm } = req.body;
-        const salespeople = await Salespeople.updateSalespeole(snum, sname, city, comm);
-        console.log(salespeople);
-        res.status(200).json({
-            success: true,
-            data: salespeople,
-            message: 'salespeople update successfully.'
-        })
+        const salespeople = await Salespeople.updateSalespeole(sname, city, comm, snum);
+        // console.log(salespeople);
+        if (salespeople.rows > 0) {
+            res.status(200).json({
+                success: true,
+                data: salespeople,
+                message: 'Salesperson updated successfully.'
+            });
+        }
     } catch (error) {
         res.status(500).json({
-            success: true,
+            success: false,
             message: 'Internal server error.'
-        })
+        });
     }
 }
 
