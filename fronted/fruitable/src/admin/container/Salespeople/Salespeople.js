@@ -18,7 +18,6 @@ function Salespeople(props) {
     const dispatch = useDispatch();
     const [update, setUpdate] = useState(null);
     const salespeople = useSelector(state => state.salespeople);
-
     console.log(salespeople);
 
     const handleClickOpen = () => {
@@ -46,11 +45,10 @@ function Salespeople(props) {
         validationSchema: SalespeopleSchema,
         onSubmit: (values, { resetForm }) => {
             if (update) {
-                dispatch(updateSalespeople(values))
+                dispatch(updateSalespeople(values));
             } else {
                 dispatch(addSalespeople(values));
             }
-
             resetForm();
             handleClose();
         },
@@ -65,13 +63,13 @@ function Salespeople(props) {
     }
 
     const handleDelete = (snum) => {
-        dispatch(deleteSalespeople(snum))
+        dispatch(deleteSalespeople(snum));
     }
+
     const columns = [
         { field: 'sname', headerName: 'Sname', width: 130 },
         { field: 'city', headerName: 'City', width: 130 },
         { field: 'comm', headerName: 'Commission', width: 130 },
-
         {
             field: 'action',
             headerName: 'Action',
