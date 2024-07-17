@@ -12,6 +12,7 @@ import Category from '../admin/container/Category/Category'
 import Subcatagory from '../admin/container/Subcategoty/Subcategoty';
 import Validation from '../admin/container/Validation/Validation';
 import Variant from '../admin/container/Variant/Variant';
+import Salespeople from '../admin/container/Salespeople/Salespeople';
 
 function AdminRoutes(props) {
     return (
@@ -27,6 +28,7 @@ function AdminRoutes(props) {
                 <Route exact path='/Subcategory' element={<Subcatagory />} />
                 <Route exact path='/Validation' element={<Validation />} />
                 <Route exact path='/Variant' element={<Variant />} />
+                <Route exact path='/Salespeople' element={<Salespeople/>}/>
             </Routes>
         </Layout>
     );

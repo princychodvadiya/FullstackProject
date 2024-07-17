@@ -25,7 +25,7 @@ import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import DiscountIcon from '@mui/icons-material/Discount';
 import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
 const drawerWidth = 240;
 
 const AdminLinks = [
@@ -40,6 +40,7 @@ const AdminLinks = [
     { title: 'Subcategory', icon: <CategoryIcon />, to: "/admin/Subcategory" },
     { title: 'Validation', icon: <AddCircleIcon />, to: "/admin/Validation" },
     { title: 'Variant', icon: <CheckCircleIcon />, to: "/admin/Variant" },
+    { title: 'Salespeople', icon: <LoyaltyIcon />, to: "/admin/Salespeople" },
 ]
 
 const openedMixin = (theme) => ({
