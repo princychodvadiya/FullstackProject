@@ -22,8 +22,8 @@ const listSalespeople = async (req, res) => {
 
 const AddSalespeople = async (req, res) => {
     try {
-        const { sname, city, comm } = req.body;
-        const salespeople = await Salespeople.addSalespeople(sname, city, comm);
+        const { sname, city, comm, isActive } = req.body;
+        const salespeople = await Salespeople.addSalespeople(sname, city, comm, isActive);
 
         res.status(201).json({
             success: true,
@@ -61,8 +61,8 @@ const DeleteSalespeople = async (req, res) => {
 const UpdateSalespeople = async (req, res) => {
     try {
         const { snum } = req.params;
-        const { sname, city, comm } = req.body;
-        const salespeople = await Salespeople.updateSalespeole(sname, city, comm, snum);
+        const { sname, city, comm, isActive } = req.body;
+        const salespeople = await Salespeople.updateSalespeole(sname, city, comm, snum, isActive);
         // console.log(salespeople);
         if (salespeople.rows > 0) {
             res.status(200).json({

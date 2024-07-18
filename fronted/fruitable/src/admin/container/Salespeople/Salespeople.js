@@ -6,13 +6,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useFormik } from 'formik';
-import { object, string, number } from 'yup';
+import { object, string, number, date } from 'yup';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSalespeople, deleteSalespeople, getSalespeople, updateSalespeople } from '../../../redux/action/salespeople.action';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton } from '@mui/material';
+import { IconButton, Switch } from '@mui/material';
+import { FormControlLabel, styled } from '@mui/material';
+
 function Salespeople(props) {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
@@ -33,7 +35,8 @@ function Salespeople(props) {
     let SalespeopleSchema = object({
         sname: string().required(),
         city: string().required(),
-        comm: number().required()
+        comm: number().required(),
+        isActive: string().required("Please enter isActive"),
     });
 
     const formik = useFormik({
@@ -41,9 +44,11 @@ function Salespeople(props) {
             sname: '',
             city: '',
             comm: '',
+            isActive: 1,
         },
         validationSchema: SalespeopleSchema,
         onSubmit: (values, { resetForm }) => {
+            // values.isActive = values.isActive === '1' ? true : false;
             if (update) {
                 dispatch(updateSalespeople(values));
             } else {
@@ -71,6 +76,13 @@ function Salespeople(props) {
         { field: 'city', headerName: 'City', width: 130 },
         { field: 'comm', headerName: 'Commission', width: 130 },
         {
+            field: 'isActive', headerName: 'Status', width: 80, renderCell: (params) => (
+                <Android12Switch
+                    checked={params.row.isActive}
+                />
+            )
+        },
+        {
             field: 'action',
             headerName: 'Action',
             width: 120,
@@ -90,6 +102,39 @@ function Salespeople(props) {
     useEffect(() => {
         dispatch(getSalespeople());
     }, [dispatch]);
+
+    const Android12Switch = styled(Switch)(({ theme }) => ({
+        padding: 8,
+        '& .MuiSwitch-track': {
+            borderRadius: 22 / 2,
+            '&::before, &::after': {
+                content: '""',
+                position: 'absolute',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: 16,
+                height: 16,
+            },
+            '&::before': {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+                    theme.palette.getContrastText(theme.palette.primary.main),
+                )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+                left: 12,
+            },
+            '&::after': {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+                    theme.palette.getContrastText(theme.palette.primary.main),
+                )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+                right: 12,
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            boxShadow: 'none',
+            width: 16,
+            height: 16,
+            margin: 2,
+        },
+    }));
 
     return (
         <div>
@@ -141,6 +186,16 @@ function Salespeople(props) {
                             onBlur={handleBlur}
                             error={errors.comm && touched.comm}
                             helperText={errors.comm && touched.comm ? errors.comm : ''}
+                        />
+                        <FormControlLabel
+                            name='isActive'
+                            control={
+                                <Android12Switch
+                                    checked={values.isActive === 1}
+                                    onChange={() => formik.setFieldValue('isActive', values.isActive === 1 ? 0 : 1)}
+                                />
+                            }
+                            label="isActive"
                         />
                     </DialogContent>
                     <DialogActions>

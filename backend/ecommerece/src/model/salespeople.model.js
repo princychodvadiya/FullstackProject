@@ -3,7 +3,6 @@ const pool = require("../db/mysql");
 const getSalespeople = async (req, res) => {
     try {
         const [result, field] = await pool.execute("SELECT * FROM salespeople")
-
         return result
     } catch (error) {
         console.log(error);
@@ -13,7 +12,7 @@ const getSalespeople = async (req, res) => {
 
 const addSalespeople = async (sname, city, comm) => {
     try {
-        const [result] = await pool.execute("INSERT INTO salespeople (sname, city, comm) VALUES (?, ?, ?)", [sname, city, comm])
+        const [result] = await pool.execute("INSERT INTO salespeople (sname, city, comm,isActive) VALUES (?, ?, ?,?)", [sname, city, comm, isActive])
         console.log(result);
         // return result;
         return ({ insertId: result.insertId, sname, city, comm })
