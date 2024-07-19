@@ -8,11 +8,11 @@ const usersSchema = new mongoose.Schema(
             trim: true,
             lowercase: true
         },
-        address: {
-            type: String,
-            required: true,
-            trim: true,
-        },
+        // address: {
+        //     type: String,
+        //     required: true,
+        //     trim: true,
+        // },
         email: {
             type: String,
             required: true,
@@ -24,13 +24,13 @@ const usersSchema = new mongoose.Schema(
             required: true
         },
         password: {
-            type: number,
+            type: String,
             required: true
         },
-        phone: {
-            type: number,
-            required: true
-        },
+        // phone: {
+        //     type: number,
+        //     required: true
+        // },
         isActive: {
             type: Boolean,
             default: true,

@@ -7,3 +7,5 @@ module.exports.controllerProducts = require('./products.controller')
 module.exports.controllerVariants = require('./variants.controller')
 
 module.exports.controllerSalsepeople = require('./salespeople.controller')
+
+module.exports.controllerUsers = require('./users.controller')
