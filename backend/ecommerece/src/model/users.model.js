@@ -31,6 +31,9 @@ const usersSchema = new mongoose.Schema(
         //     type: number,
         //     required: true
         // },
+        RefreshToken: {
+            type: String
+        },
         isActive: {
             type: Boolean,
             default: true,

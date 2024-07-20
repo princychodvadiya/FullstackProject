@@ -8,4 +8,9 @@ router.post(
     controllerUsers.register
 )
 
+router.post(
+    '/login',
+    controllerUsers.login
+)
+
 module.exports = router;
