@@ -126,12 +126,32 @@ const login = async (req, res) => {
 
         const { AccessToken, RefreshToken } = await AccRefToken(user._id);
 
-        console.log(AccessToken, RefreshToken);
+        // console.log(AccessToken, RefreshToken);
+        const newdataf = await Users.findById({ _id: user._id }).select("-password -RefreshToken");
 
+        const option = {
+            httpOnly: true,
+            secure: true
+        }
+
+        res.status(200)
+            .cookie("AccessToken", AccessToken, option)
+            .cookie("RefreshToken", RefreshToken, option)
+            .json({
+                success: true,
+                message: "data fetch succsesfully.",
+                data: {
+                    user: { ...newdataf.toObject(), AccessToken }
+                }
+            })
     } catch (error) {
-        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "internal server erorr.",
+        });
     }
 }
+
 
 module.exports = {
     register,

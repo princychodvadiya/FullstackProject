@@ -1,10 +1,11 @@
 const express = require('express');
 const routes = require('./routes/api/v1/index');
 const connectDB = require('./db/mongodb');
+const cookieParser = require('cookie-parser')
 var cors = require('cors')
 const app = express();
 app.use(express.json())
-
+app.use(cookieParser())
 app.use(cors())
 
 connectDB();
