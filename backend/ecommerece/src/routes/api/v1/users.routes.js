@@ -13,4 +13,9 @@ router.post(
     controllerUsers.login
 )
 
+router.post(
+    '/generateNewTokens',
+    controllerUsers.newToken
+)
+
 module.exports = router;

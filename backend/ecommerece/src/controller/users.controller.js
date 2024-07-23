@@ -152,8 +152,68 @@ const login = async (req, res) => {
     }
 }
 
+const newToken = async (req, res) => {
+    // console.log("ok");
+    // console.log(req.body);
+
+    try {
+        console.log("hhh", req.cookies.RefreshToken);
+
+        const validateToken = await jwt.verify(req.cookies.RefreshToken, "trrerefsdfdfe")
+        console.log("uuu", validateToken);
+
+        if (!validateToken) {
+            return res.status(401).json({
+                success: false,
+                message: "invalid refresh token."
+            })
+        }
+
+        const user = await Users.findById(validateToken._id)
+        console.log(user, "ajikshd");
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "user is not found."
+            })
+        }
+
+
+        const { AccessToken, RefreshToken } = await AccRefToken(user._id);
+
+        if (req.cookies.RefreshToken != user.toObject().RefreshToken) {
+            return res.status(401).json({
+                success: false,
+                message: "invalid Token."
+            })
+        }
+
+        const option = {
+            httpOnly: true,
+            secure: true
+        }
+
+        res.status(200)
+            .cookie("AccessToken", AccessToken, option)
+            .cookie("RefreshToken", RefreshToken, option)
+            .json({
+                success: true,
+                message: "data fetch succsesfully.",
+                data: {
+                    user: { AccessToken }
+                }
+            })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "internal server erorr.",
+        });
+    }
+}
 
 module.exports = {
     register,
-    login
+    login,
+    newToken
 }
