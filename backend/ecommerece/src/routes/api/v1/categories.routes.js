@@ -1,5 +1,6 @@
 const express = require('express');
 const { controllerCategories } = require('../../../controller');
+const auth = require('../../../middleware/auth');
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ router.get(
 
 router.get(
     '/list-categories',
+    auth(["admin", "employe"]),
     controllerCategories.listCategories
 )
 

@@ -58,7 +58,7 @@ const addVariant = async (req, res) => {
     // console.log(req.file);
 
     const fileRes = await uploadFile(req.file.path, "Variant");
-    console.log(fileRes);
+    // console.log(fileRes);
 
     try {
         const variant = await Variants.create({
@@ -131,11 +131,11 @@ const updateVariant = async (req, res) => {
     }
 
     if (req.file) {
-        console.log("New image.");
+        // console.log("New image.");
 
         try {
             const fileRes = await uploadFile(req.file.path, "Variant");
-            console.log(fileRes);
+            // console.log(fileRes);
 
             const updatedVariantData = {
                 ...req.body,
@@ -167,11 +167,11 @@ const updateVariant = async (req, res) => {
             });
         }
     } else {
-        console.log("Old image.");
+        // console.log("Old image.");
 
         try {
             const variant = await Variants.findByIdAndUpdate(variantId, req.body, { new: true, runValidators: true });
-            console.log(variant);
+            // console.log(variant);
 
             if (!variant) {
                 return res.status(400).json({

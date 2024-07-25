@@ -1,6 +1,7 @@
 const Categories = require("../model/categories.model")
 
 const listCategories = async (req, res) => {
+    console.log("cateee", req.user);
     try {
         const categories = await Categories.find();
 
@@ -100,7 +101,7 @@ const deleteCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
     try {
         const category = await Categories.findByIdAndUpdate(req.params.category_id, req.body, { new: true, runValidators: true });
-        console.log(category);
+        // console.log(category);
 
 
         if (!category) {
@@ -124,7 +125,7 @@ const updateCategory = async (req, res) => {
 }
 
 const countActive = async () => {
-    console.log("ok");
+    // console.log("ok");
     const category = await Categories.aggregate([
         {
             $match: {
@@ -136,11 +137,11 @@ const countActive = async () => {
         }
     ]
     )
-    console.log(category);
+    // console.log(category);
 }
 
 const countinActive = async () => {
-    console.log("ok");
+    // console.log("ok");
 
     const category = await Categories.aggregate(
         [
@@ -151,7 +152,7 @@ const countinActive = async () => {
             }
         ]
     )
-    console.log(category);
+    // console.log(category);
 }
 
 module.exports = {
