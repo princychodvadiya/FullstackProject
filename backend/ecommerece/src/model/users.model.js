@@ -24,14 +24,16 @@ const usersSchema = new mongoose.Schema(
             required: true
         },
         password: {
-            type: String,
-            required: true
+            type: String
         },
         // phone: {
         //     type: number,
         //     required: true
         // },
         RefreshToken: {
+            type: String
+        },
+        googleId: {
             type: String
         },
         isActive: {
@@ -48,3 +50,5 @@ const usersSchema = new mongoose.Schema(
 const Users = mongoose.model('Users', usersSchema);
 
 module.exports = Users;
+
+

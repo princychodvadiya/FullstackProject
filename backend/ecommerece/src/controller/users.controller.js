@@ -212,8 +212,44 @@ const newToken = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    try {
+        console.log(req.body._id);
+        const user = await Users.findByIdAndUpdate(
+            req.body._id,
+            {
+                $unset: {
+                    refreshToken: 1
+                }
+            },
+            {
+                new: true
+            }
+        );
+
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: 'User not login.'
+            });
+        }
+        console.log(user);
+        res.status(200).json({
+            success: true,
+            message: 'Logout successful.'
+        })
+    } catch (error) {
+        console.error('Logout error:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Logout failed.'
+        });
+    }
+}
+
 module.exports = {
     register,
     login,
-    newToken
+    newToken,
+    logout
 }
