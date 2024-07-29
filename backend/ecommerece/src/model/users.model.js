@@ -15,7 +15,7 @@ const usersSchema = new mongoose.Schema(
         // },
         email: {
             type: String,
-            required: true,
+            // required: true,
             trim: true,
             lowercase: true
         },
@@ -33,7 +33,10 @@ const usersSchema = new mongoose.Schema(
         RefreshToken: {
             type: String
         },
-        googleId: {
+        // googleId: {
+        //     type: String
+        // },
+        facebookId: {
             type: String
         },
         isActive: {
@@ -47,6 +50,7 @@ const usersSchema = new mongoose.Schema(
         versionKey: false
     }
 )
+
 const Users = mongoose.model('Users', usersSchema);
 
 module.exports = Users;

@@ -40,7 +40,8 @@ router.get(
 
 router.get(
     '/facebooklogin',
-    passport.authenticate('facebook'));
+    passport.authenticate('facebook')
+);
 
 router.get(
     '/facebook/callback',
