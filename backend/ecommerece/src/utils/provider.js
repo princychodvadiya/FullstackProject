@@ -56,55 +56,55 @@ const googleLoginProvider = async () => {
 }
 
 const facebookLoginProvider = async () => {
-    try {
-        passport.use(new FacebookStrategy({
-            clientID: "",
-            clientSecret: "",
-            callbackURL: "http://localhost:8000/api/v1/users/facebook/callback",
-            enableProof: true,
-            profileFields: ["id", "displayName", "emails"]
-        },
-            async function (accessToken, refreshToken, profile, cb) {
-                console.log(profile, "ok");
-                try {
-                    let user = await Users.findOne({ facebookId: profile.id });
-                    console.log(user, "suifg", profile.emails[0].value);
-                    if (!user) {
-                        user = await Users.create({
-                            name: profile.displayName,
-                            email: profile.emails ? profile.emails[0].value : null,
-                            // email: profile.emails[0].value,
-                            facebookId: profile.id,
-                            role: "user"
-                        })
-                        return cb(null, user);
-                    }
-                } catch (error) {
-                    console.log(error);
-                    return cb(error, null);
-                }
-                // Users.findOrCreate({ facebookId: profile.id }, function (err, user) {
-                //     return cb(err, user);
-                // });
-            }
-        ));
-        passport.serializeUser(function (user, done) {
-            console.log("serializeUser", user);
-            done(null, user);
-        });
-        passport.deserializeUser(async (id, done) => {
-            console.log("deserializeUser", id);
-            try {
-                const user = await Users.findById(id);
-                done(null, user.id);
-            } catch (error) {
-                console.error('Error deserializing user:', error);
-                done(error, null);
-            }
-        });
-    } catch (error) {
-        console.log(error);
-    }
+    // try {
+    //     passport.use(new FacebookStrategy({
+    //         clientID: "",
+    //         clientSecret: "",
+    //         callbackURL: "http://localhost:8000/api/v1/users/facebook/callback",
+    //         enableProof: true,
+    //         profileFields: ["id", "displayName", "emails"]
+    //     },
+    //         async function (accessToken, refreshToken, profile, cb) {
+    //             console.log(profile, "ok");
+    //             try {
+    //                 let user = await Users.findOne({ facebookId: profile.id });
+    //                 console.log(user, "suifg", profile.emails[0].value);
+    //                 if (!user) {
+    //                     user = await Users.create({
+    //                         name: profile.displayName,
+    //                         email: profile.emails ? profile.emails[0].value : null,
+    //                         // email: profile.emails[0].value,
+    //                         facebookId: profile.id,
+    //                         role: "user"
+    //                     })
+    //                     return cb(null, user);
+    //                 }
+    //             } catch (error) {
+    //                 console.log(error);
+    //                 return cb(error, null);
+    //             }
+    //             // Users.findOrCreate({ facebookId: profile.id }, function (err, user) {
+    //             //     return cb(err, user);
+    //             // });
+    //         }
+    //     ));
+    //     passport.serializeUser(function (user, done) {
+    //         console.log("serializeUser", user);
+    //         done(null, user);
+    //     });
+    //     passport.deserializeUser(async (id, done) => {
+    //         console.log("deserializeUser", id);
+    //         try {
+    //             const user = await Users.findById(id);
+    //             done(null, user.id);
+    //         } catch (error) {
+    //             console.error('Error deserializing user:', error);
+    //             done(error, null);
+    //         }
+    //     });
+    // } catch (error) {
+    //     console.log(error);
+    // }
 }
 
 module.exports = { googleLoginProvider, facebookLoginProvider }
