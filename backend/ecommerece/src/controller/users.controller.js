@@ -1,6 +1,7 @@
 const Users = require("../model/users.model");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
+const { sendMail } = require("../utils/nodemailer");
 
 const AccRefToken = async (id) => {
     try {
@@ -46,8 +47,7 @@ const register = async (req, res) => {
         const user = await Users.findOne(
             { $or: [{ email }] }
         );
-
-        console.log(user);
+        console.log("ok", user);
         if (user) {
             return res.status(400).json({
                 success: false,
@@ -56,7 +56,7 @@ const register = async (req, res) => {
         }
 
         const hashpassoword = await bcrypt.hash(password, 10);
-        console.log(hashpassoword);
+        console.log("ok", hashpassoword);
 
         if (!hashpassoword) {
             return res.status(409).json({
@@ -82,6 +82,7 @@ const register = async (req, res) => {
                 message: "internal server erorr.",
             });
         }
+        sendMail();
         res.status(201).json({
             success: true,
             message: "user created successfully.",
