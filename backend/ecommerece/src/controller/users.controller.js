@@ -2,6 +2,7 @@ const Users = require("../model/users.model");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 const { sendMail } = require("../utils/nodemailer");
+const { pdfmake } = require("../utils/pdfmake");
 
 const AccRefToken = async (id) => {
     try {

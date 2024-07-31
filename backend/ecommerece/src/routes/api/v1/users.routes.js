@@ -1,6 +1,7 @@
 const express = require('express');
 const { controllerUsers } = require('../../../controller');
 const passport = require('passport');
+const exportpdfmake = require('../../../utils/pdfmake');
 
 const router = express.Router();
 
@@ -51,6 +52,12 @@ router.get(
         console.log("Successful");
         res.send('<h1>ok</h1>');
     });
+
+    
+router.get(
+    '/pdfmake',
+    exportpdfmake
+)
 
 module.exports = router;
 
