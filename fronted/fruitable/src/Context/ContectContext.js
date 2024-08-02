@@ -18,7 +18,7 @@ export const ContectProvider = ({ children }) => {
     const addContect = async (data) => {
         try {
             const response = await axios.post(baseURL + 'contacts', data)
-            console.log(response.data);
+            // console.log(response.data);
 
             dispatch({ type: ADD_CONTECT, payload: response.data })
         } catch (error) {
@@ -28,7 +28,7 @@ export const ContectProvider = ({ children }) => {
     const getContect = async (data) => {
         try {
             const response = await axios.get(baseURL + 'contacts', data)
-            console.log(response.data);
+            // console.log(response.data);
 
             dispatch({ type: GET_CONTECT, payload: response.data })
         } catch (error) {
@@ -40,7 +40,7 @@ export const ContectProvider = ({ children }) => {
     const deleteContect = async (id) => {
         try {
             const response = await axios.delete(baseURL + 'contacts/' + id)
-            console.log(response.id);
+            // console.log(response.id);
 
             dispatch({ type: DELETE_CONTECT, payload: id })
         } catch (error) {
@@ -52,7 +52,7 @@ export const ContectProvider = ({ children }) => {
     const updateContect = async (data) => {
         try {
             const response = await axios.put(baseURL + 'contacts/' + data.id, data)
-            console.log(response.id);
+            // console.log(response.id);
 
             dispatch({ type: UPADTE_CONTECT, payload: response.data })
         } catch (error) {

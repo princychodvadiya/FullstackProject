@@ -7,6 +7,7 @@ var cors = require('cors');
 // const googleLoginProvider = require('./utils/provider');
 const passport = require('passport');
 const { facebookLoginProvider } = require('./utils/provider');
+const connectChat = require('./utils/socketIO');
 
 const app = express();
 app.use(express.json())
@@ -16,6 +17,7 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveU
 app.use(passport.initialize());
 app.use(passport.session());
 connectDB();
+connectChat()
 // googleLoginProvider();
 facebookLoginProvider()
 app.use('/api/v1', routes);

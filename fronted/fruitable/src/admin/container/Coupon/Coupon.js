@@ -20,7 +20,7 @@ function Coupon(props) {
     const dispatch = useDispatch()
 
     const coupon = useSelector(state => state.coupon)
-    console.log(coupon);
+    // console.log(coupon);
 
     const handleClickOpen = () => {
         setOpen(true);

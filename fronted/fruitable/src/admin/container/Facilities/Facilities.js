@@ -58,7 +58,7 @@ function Facilities(props) {
     const { handleBlur, handleChange, handleSubmit, errors, touched, values } = formik
 
     const handelDelete = (id) => {
-        console.log(id);
+        // console.log(id);
         dispatch(deleteFacilities(id))
     }
 

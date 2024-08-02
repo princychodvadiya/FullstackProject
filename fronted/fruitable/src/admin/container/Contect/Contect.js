@@ -20,7 +20,7 @@ function Contect(props) {
     const [update, setupdate] = useState(false)
 
     const contect = useContext(ContectContext)
-    console.log(contect);
+    // console.log(contect);
 
     const handleClickOpen = () => {
         setOpen(true);

@@ -1,7 +1,7 @@
 import { TOGGLE_THEME } from "../ActionType";
 
 export const ThemeReducer = (state, action) => {
-    console.log(action);
+    // console.log(action);
 
     switch (action.type) {
         case TOGGLE_THEME:

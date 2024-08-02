@@ -1,9 +1,8 @@
 import { ADD_CONTECT, DELETE_CONTECT, GET_CONTECT, UPADTE_CONTECT } from "../ActionType";
 
 export const ContectReducer = (state, action) => {
-    console.log(action.type);
+    // console.log(action.type);
 
-    
     switch (action.type) {
         case ADD_CONTECT:
             return {

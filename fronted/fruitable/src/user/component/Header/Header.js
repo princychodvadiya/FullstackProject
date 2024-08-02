@@ -13,13 +13,13 @@ import { getdata } from '../../../redux/action/products.action';
 
 function Header(props) {
     const cart = useSelector(state => state.cart)
-    console.log(cart);
+    // console.log(cart);
 
     const cart_quantity = cart.cart.reduce((a, b) => a + b.qty, 0)
-    console.log(cart_quantity);
+    // console.log(cart_quantity);
 
     const themeContext = useContext(ThemeContext);
-    console.log(themeContext);
+    // console.log(themeContext);
 
     const ChangeTheme = () => {
         themeContext.toggleTheme(themeContext.theme)
@@ -30,9 +30,9 @@ function Header(props) {
     const products = useSelector(state => state.product);
     const subcategories = useSelector(state => state.subcategory.subcategory);
     const categories = useSelector(state => state.category.category);
-    console.log(subcategories);
-    console.log(products);
-    console.log(categories);
+    // console.log(subcategories);
+    // console.log(products);
+    // console.log(categories);
 
     const [categoryData, setCategoryData] = useState('');
     const [subcategoryData, setSubcategoryData] = useState('');
@@ -93,6 +93,7 @@ function Header(props) {
                             <div className="navbar-nav mx-auto">
                                 <NavLink to="/" className="nav-item nav-link active">Home</NavLink>
                                 <NavLink to="/shop" className="nav-item nav-link">Shop</NavLink>
+                                <NavLink to="/chat" className="nav-item nav-link">Chat</NavLink>
                                 <NavLink to="/shop-details" className="nav-item nav-link">Shop Detail</NavLink>
                                 <div className="nav-item dropdown">
                                     <NavLink to="/pages" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</NavLink>
@@ -146,7 +147,7 @@ function Header(props) {
             <div className="container topbar d-none d-lg-block">
                 <Box sx={{ display: 'flex', padding: '0 10px' }}>
 
-                    {categories.map(category => (
+                    {categories?.map(category => (
                         <Box key={category.id} sx={{ margin: '0 10px' }}>
                             <Button
                                 aria-controls="category-menu"

@@ -13,6 +13,7 @@ import Testimonial from '../user/container/Pages/Testimonial';
 import PrivateRoutes from './PrivateRoutes';
 import Review from '../user/container/Review/Review';
 import { ThemeContext } from '../Context/ThemeContext';
+import Chat from '../user/container/Chat/Chat';
 
 function UserRoutes(props) {
     const theme = useContext(ThemeContext)
@@ -35,6 +36,7 @@ function UserRoutes(props) {
                     <Route exact path="/tetimonial" element={<Testimonial />} />
                     <Route exact path="/error" element={<Error />} />
                     <Route exact path='/review' element={<Review />} />
+                    <Route exact path='/chat' element={<Chat />} />
                 </Routes>
                 <Footer />
             </div>

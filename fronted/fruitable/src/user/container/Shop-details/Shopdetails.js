@@ -12,7 +12,7 @@ function Shopdetails(props) {
     const dispatch = useDispatch()
 
     const cart = useSelector(state => state.cart);
-    console.log(cart);
+    // console.log(cart);
 
     const reviews = useSelector(state => state.review)
     // console.log(reviews);

@@ -54,7 +54,7 @@ function Reviews(props) {
         onSubmit: (values, { resetForm }) => {
             axios.post('http://localhost:8000/review', values)
                 .then((Response) => {
-                    console.log(Response.data);
+                    // console.log(Response.data);
                     setReview(Response.data);
                 })
                 .catch((error) => {
