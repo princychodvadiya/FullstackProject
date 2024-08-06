@@ -97,6 +97,19 @@ const register = async (req, res) => {
         });
     }
 }
+const registerOTP = async (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "registerOTP successfully send."
+    });
+}
+
+const verifyOTP = async (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "verifyOTP successfully session."
+    });
+}
 
 const login = async (req, res) => {
 
@@ -157,7 +170,6 @@ const login = async (req, res) => {
 const newToken = async (req, res) => {
     // console.log("ok");
     // console.log(req.body);
-
     try {
         console.log("hhh", req.cookies.RefreshToken);
 
@@ -253,5 +265,6 @@ module.exports = {
     register,
     login,
     newToken,
-    logout
+    logout,
+    registerOTP, verifyOTP
 }

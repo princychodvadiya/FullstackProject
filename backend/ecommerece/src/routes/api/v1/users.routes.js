@@ -2,12 +2,25 @@ const express = require('express');
 const { controllerUsers } = require('../../../controller');
 const passport = require('passport');
 const exportpdfmake = require('../../../utils/pdfmake');
+const { sendOTP, verifyOTP } = require('../../../utils/twilioOTP');
 
 const router = express.Router();
 
 router.post(
     '/register',
     controllerUsers.register
+)
+
+router.post(
+    '/registerOTP',
+    sendOTP,
+    controllerUsers.registerOTP
+)
+
+router.get(
+    '/verifyOTP',
+    verifyOTP,
+    controllerUsers.registerOTP
 )
 
 router.post(
@@ -53,11 +66,11 @@ router.get(
         res.send('<h1>ok</h1>');
     });
 
-    
 router.get(
     '/pdfmake',
     exportpdfmake
 )
 
 module.exports = router;
+
 
