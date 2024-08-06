@@ -1,6 +1,9 @@
 const express = require('express');
 const { controllerCategories } = require('../../../controller');
 const auth = require('../../../middleware/auth');
+const { creatCategory } = require('../../../validation/category.validation');
+const { categoryValidation } = require('../../../validation');
+const { validation } = require('../../../middleware/validation');
 
 const router = express.Router();
 
@@ -17,6 +20,7 @@ router.get(
 
 router.post(
     '/add-category',
+    validation(categoryValidation.creatCategory),
     controllerCategories.addCategory
 )
 
