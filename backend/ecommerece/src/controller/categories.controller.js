@@ -1,20 +1,41 @@
 const Categories = require("../model/categories.model")
 
 const listCategories = async (req, res) => {
-    console.log("cateee", req.user);
+    console.log("cateee", req.query.page, req.query.pageSize);
     try {
+
+        const page = parseInt(req.query.page)
+        const pageSize = parseInt(req.query.pageSize)
+
+        if (page <= 0 || pageSize <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid page or page size"
+            })
+        }
+
         const categories = await Categories.find();
 
         if (!categories || categories.length === 0) {
-            res.status(404).json({
+            return res.status(404).json({
                 success: false,
                 meassage: 'Categories not found.'
             })
         }
+
+        let startIndex = 0, endIndex = 0, paginationData = []
+
+        if (page > 0 && pageSize > 0) {
+            startIndex = (page - 1) * pageSize        //startIndex=(3-1)*3=3
+            endIndex = startIndex + pageSize             //endIndex=3+3=6
+            paginationData = categories.slice(startIndex, endIndex)
+        }
+
         res.status(200).json({
             success: true,
+            totalData: categories.length,
             message: 'Categories fetch successfully.',
-            data: categories
+            data: paginationData
         })
 
     } catch (error) {
@@ -50,9 +71,12 @@ const getCategory = async (req, res) => {
 }
 
 const addCategory = async (req, res) => {
+    console.log("OK", req.body);
+
     try {
         const category = await Categories.create(req.body);
         console.log(category);
+
 
         if (!category) {
             res.status(400).json({

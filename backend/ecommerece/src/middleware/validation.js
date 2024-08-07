@@ -19,10 +19,11 @@ const validation = (schema) => (req, res, next) => {
     if (error) {
         const errMsg = error.details.map((v) => v.message).join(", ")
 
-        return object.assign(errMsg)
-
+        return next(new Error("validate erorr:" + errMsg));
     }
+    Object.assign(req, value);
     next();
+
 }
 
 module.exports = {

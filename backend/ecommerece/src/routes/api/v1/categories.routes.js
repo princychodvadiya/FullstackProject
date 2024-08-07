@@ -8,13 +8,15 @@ const { validation } = require('../../../middleware/validation');
 const router = express.Router();
 
 router.get(
-    '/get-categories/:category_id',
+    '/get-categories',                  //categoryValidation api
+    // '/get-categories/:category_id',    //get categoty api
+    validation(categoryValidation.getCategory),
     controllerCategories.getCategory
 )
 
 router.get(
     '/list-categories',
-    auth(["admin", "employe"]),
+    // auth(["admin", "employe"]),
     controllerCategories.listCategories
 )
 
@@ -26,11 +28,13 @@ router.post(
 
 router.put(
     '/update-category/:category_id',
+    validation(categoryValidation.updateCategory),
     controllerCategories.updateCategory
 )
 
 router.delete(
     '/delete-category/:category_id',
+    validation(categoryValidation.deleteCategory),
     controllerCategories.deleteCategory
 )
 router.get(
