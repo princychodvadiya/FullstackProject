@@ -76,12 +76,6 @@ const searchProducts = async (req, res) => {
                 $sort: {
                     name: sortOrder === "acs" ? 1 : -1
                 }
-            },
-            {
-                $skip: 0
-            },
-            {
-                $limit: 10
             }
         ]
 
