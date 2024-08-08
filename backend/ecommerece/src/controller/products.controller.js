@@ -1,6 +1,109 @@
 const Products = require("../model/produts.model");
 const uploadFile = require("../utils/cloudinary");
 
+const searchProducts = async (req, res) => {
+    try {
+
+        const { sortOrder, rating, max, min, category, page, limit } = req.body
+
+        const metchpip = {}
+
+        if (rating) {
+            metchpip['avgRating'] = {
+                $gte: rating
+            }
+        }
+
+        if (sortOrder) {
+            metchpip['sort'] = sortOrder
+        }
+
+        if (category) {
+            metchpip['category_id'] = category
+        }
+
+        metchpip['variant.attributes.Price'] = {
+
+        }
+
+        if (max != undefined) {
+            metchpip['variant.attributes.Price'].$lte = max
+        }
+
+        if (min != undefined) {
+            metchpip['variant.attributes.Price'].$gte = min
+        }
+
+        console.log(metchpip);
+
+        const pipeline = [
+            {
+                $lookup: {
+                    from: "variants",
+                    localField: "_id",
+                    foreignField: "product_id",
+                    as: "variants"
+                }
+            },
+            {
+                $lookup: {
+                    from: "reviews",
+                    localField: "_id",
+                    foreignField: "product_id",
+                    as: "reviews"
+                }
+            },
+            {
+                $addFields: {
+                    avgRating: { $avg: "$reviews.rating" }
+                }
+            },
+            {
+                $unwind: "$variants"
+            },
+            {
+                $match: metchpip
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    name: { $first: '$name' },
+                    variants: { $push: "$variants" },
+                    reviews: { $push: "$reviews" }
+                }
+            },
+            {
+                $sort: {
+                    name: sortOrder === "acs" ? 1 : -1
+                }
+            },
+            {
+                $skip: 0
+            },
+            {
+                $limit: 10
+            }
+        ]
+
+        if (page > 0 && limit > 0) {
+            pipeline.push({ $skip: (page - 1) * limit })
+            pipeline.push({ $limit: limit })
+        }
+
+        const data = await Products.aggregate(pipeline);
+        console.log(data);
+
+        res.status(200).json({
+            success: true,
+            message: 'Product aggregate successfully.',
+            data: data
+        });
+
+    } catch (error) {
+        console.log(error);
+
+    }
+}
 const listProducts = async (req, res) => {
     try {
         const products = await Products.find();
@@ -112,7 +215,6 @@ const deleteProduct = async (req, res) => {
         })
     }
 }
-
 
 const updateProduct = async (req, res) => {
     // console.log(req.params.product_id, req.body, req.file);
@@ -301,6 +403,7 @@ const productByCategory = async () => {
     )
     console.log(productByCategory);
 }
+
 module.exports = {
     listProducts,
     getProduct,
@@ -310,5 +413,6 @@ module.exports = {
     Countcategory,
     // outofstock,
     productByCategory,
-    getProductBySubcategory
+    getProductBySubcategory,
+    searchProducts
 }
