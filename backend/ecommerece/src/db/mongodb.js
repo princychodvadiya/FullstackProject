@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-    
+
     try {
-        await mongoose.connect('mongodb+srv://chodvadiyaprinci:princy6354@cluster0.gbuuhgc.mongodb.net/demo')
+        await mongoose.connect(process.env.MONGODB_DEMO_URL)
             .then(() => { console.log("mongoDB connect succsesfully.") })
             .catch((error) => {
                 console.log("mongoDB is connaction error" + error);

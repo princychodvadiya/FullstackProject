@@ -1,5 +1,6 @@
-
+require('dotenv').config()
 const express = require('express');
+
 const routes = require('./routes/api/v1/index');
 const connectDB = require('./db/mongodb');
 const cookieParser = require('cookie-parser')

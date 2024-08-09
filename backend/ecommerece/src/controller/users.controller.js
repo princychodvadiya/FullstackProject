@@ -21,15 +21,14 @@ const AccRefToken = async (id) => {
             role: user.role,
             expiresIn: '1 h'
         },
-            'jnkjfnhroin4456jljdsd',
-            { expiresIn: 60 * 60 });
+            process.env.ACCESS_TOKEN_KEY,
+            { expiresIn: process.env.ACCESS_TOKEN_EXPIRESIN });
 
         const RefreshToken = await jwt.sign({
             _id: user._id
         },
-            'trrerefsdfdfe',
-            { expiresIn: '2 days' });
-
+            process.env.REFRESH_TOKEN_KEY,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRESIN });
 
         user.RefreshToken = RefreshToken;
         await user.save({ validateBeforeSave: false })

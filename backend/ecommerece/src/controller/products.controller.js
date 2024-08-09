@@ -3,7 +3,6 @@ const uploadFile = require("../utils/cloudinary");
 
 const searchProducts = async (req, res) => {
     try {
-
         const { sortOrder, rating, max, min, category, page, limit } = req.body
 
         const metchpip = {}
@@ -14,24 +13,20 @@ const searchProducts = async (req, res) => {
             }
         }
 
-        if (sortOrder) {
-            metchpip['sort'] = sortOrder
-        }
-
         if (category) {
             metchpip['category_id'] = category
         }
 
-        metchpip['variant.attributes.Price'] = {
+        metchpip['variants.attributes.Price'] = {
 
         }
 
         if (max != undefined) {
-            metchpip['variant.attributes.Price'].$lte = max
+            metchpip['variants.attributes.Price'].$lte = max
         }
 
         if (min != undefined) {
-            metchpip['variant.attributes.Price'].$gte = min
+            metchpip['variants.attributes.Price'].$gte = min
         }
 
         console.log(metchpip);
