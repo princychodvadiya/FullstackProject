@@ -15,12 +15,12 @@ const sendMail = () => {
         to: 'sanjanatalaviya1011@gmail.com',
         subject: 'Sending Email using Node.js',
         text: 'demo!!!!',
-        attachments: [
-            {
-                filename: 'image',
-                path: "D:/image.jfif"
-            }
-        ]
+        // attachments: [
+        //     {
+        //         filename: 'image',
+        //         path: "D:/image.jfif"
+        //     }
+        // ]
         // attachments: [
         //     {
         //         filename: 'pdf',

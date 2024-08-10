@@ -26,7 +26,7 @@ const auth = (roles = []) => async (req, res, next) => {
             if (!roles.some((v) => v === user.role)) {
                 return res.status(400).json({
                     success: false,
-                    message: "You have not accses."
+                    message: "You have not accses." + error.message
                 })
             }
             req.user = user

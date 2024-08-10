@@ -26,6 +26,9 @@ const usersSchema = new mongoose.Schema(
         password: {
             type: String
         },
+        avtar: {
+            type: String
+        },
         // phone: {
         //     type: number,
         //     required: true

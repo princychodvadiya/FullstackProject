@@ -8,7 +8,7 @@ const AccRefToken = async (id) => {
     try {
         const user = await Users.findById(id);
         console.log("juhivbndfikjvn", user);
-
+      
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -19,16 +19,16 @@ const AccRefToken = async (id) => {
         const AccessToken = await jwt.sign({
             _id: user.id,
             role: user.role,
-            expiresIn: '1 h'
+            expiresIn: 360000
         },
             process.env.ACCESS_TOKEN_KEY,
-            { expiresIn: process.env.ACCESS_TOKEN_EXPIRESIN });
+            { expiresIn: 360000 });
 
         const RefreshToken = await jwt.sign({
             _id: user._id
         },
             process.env.REFRESH_TOKEN_KEY,
-            { expiresIn: process.env.REFRESH_TOKEN_EXPIRESIN });
+            { expiresIn: 3600000 });
 
         user.RefreshToken = RefreshToken;
         await user.save({ validateBeforeSave: false })
@@ -42,6 +42,7 @@ const AccRefToken = async (id) => {
 const register = async (req, res) => {
     try {
         console.log(req.body);
+        console.log(req.file);
 
         const { email, password } = req.body;
         const user = await Users.findOne(
@@ -65,7 +66,7 @@ const register = async (req, res) => {
             });
         }
 
-        const newdata = await Users.create({ ...req.body, password: hashpassoword })
+        const newdata = await Users.create({ ...req.body, password: hashpassoword, avtar: req.file.path })
 
         if (!newdata) {
             return res.status(500).json({
@@ -153,7 +154,7 @@ const login = async (req, res) => {
             .cookie("RefreshToken", RefreshToken, option)
             .json({
                 success: true,
-                message: "data fetch succsesfully.",
+                message: "login succsecfully.",
                 data: {
                     user: { ...newdataf.toObject(), AccessToken }
                 }
@@ -232,7 +233,7 @@ const logout = async (req, res) => {
             req.body._id,
             {
                 $unset: {
-                    refreshToken: 1
+                    RefreshToken: 1
                 }
             },
             {

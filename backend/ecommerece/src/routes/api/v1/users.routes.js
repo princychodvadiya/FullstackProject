@@ -3,11 +3,13 @@ const { controllerUsers } = require('../../../controller');
 const passport = require('passport');
 const exportpdfmake = require('../../../utils/pdfmake');
 const { sendOTP, verifyOTP } = require('../../../utils/twilioOTP');
+const upload = require('../../../middleware/upload');
 
 const router = express.Router();
 
 router.post(
     '/register',
+    upload.single('avtar'),
     controllerUsers.register
 )
 
@@ -37,7 +39,7 @@ router.post(
     '/logout',
     controllerUsers.logout
 )
-
+    
 router.get(
     '/googlelogin',
     passport.authenticate('google', { scope: ['profile', 'email'] })

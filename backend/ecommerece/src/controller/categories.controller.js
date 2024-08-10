@@ -124,28 +124,28 @@ const deleteCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-        const category = await Categories.findByIdAndUpdate(req.params.category_id, req.body, { new: true, runValidators: true });
-        // console.log(category);
+        console.log("yyyyyyyyyyyyyy", req.params.category_id, req.body);
 
+        const category = await Categories.findByIdAndUpdate(req.params.category_id, req.body, { new: true, runValidators: true });
+        console.log("uuu", category);
 
         if (!category) {
-            res.status(400).json({
+            return res.status(404).json({
                 success: false,
-                message: 'Category not updated.'
+                message: 'Category not found.'
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: 'Category updated successfully.',
             data: category
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             meassage: 'Internal Server Error.' + error.message
         })
     }
-
 }
 
 const countActive = async () => {
