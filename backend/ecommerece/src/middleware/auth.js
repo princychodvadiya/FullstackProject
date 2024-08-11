@@ -14,9 +14,7 @@ const auth = (roles = []) => async (req, res, next) => {
 
         try {
             const validateToken = await jwt.verify(token, process.env.ACCESS_TOKEN_KEY)
-
             const user = await Users.findById(validateToken._id);
-
             if (!user) {
                 return res.status(404).json({
                     success: false,
