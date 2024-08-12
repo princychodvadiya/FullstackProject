@@ -18,7 +18,8 @@ function Login() {
                     password: Yup.string()
                         .required('Password is required')
                         .min(6, 'Password must be at least 6 characters'),
-                });
+                })
+                
             case 'signUp':
                 return Yup.object({
                     name: Yup.string().required('Name is required'),
