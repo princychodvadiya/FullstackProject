@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { register } from '../../../redux/reducer/slice/login.slice';
+import { login, register } from '../../../redux/reducer/slice/login.slice';
 
 function Login() {
     const [view, setView] = useState('login');
@@ -19,7 +19,7 @@ function Login() {
                         .required('Password is required')
                         .min(6, 'Password must be at least 6 characters'),
                 })
-                
+
             case 'signUp':
                 return Yup.object({
                     name: Yup.string().required('Name is required'),
@@ -51,7 +51,10 @@ function Login() {
         onSubmit: values => {
             if (view === 'signUp') {
                 dispatch(register({ ...values, role: 'user' }));
+            } else if (view === 'login') {
+                dispatch(login(values))
             }
+
 
         },
     });
