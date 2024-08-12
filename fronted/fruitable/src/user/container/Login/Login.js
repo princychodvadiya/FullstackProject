@@ -54,8 +54,6 @@ function Login() {
             } else if (view === 'login') {
                 dispatch(login(values))
             }
-
-
         },
     });
 
@@ -69,6 +67,7 @@ function Login() {
                         <h6>Email</h6>
                         <input
                             type="email"
+                            fullWidth
                             placeholder="Enter your email"
                             name="email"
                             value={values.email}
@@ -79,6 +78,7 @@ function Login() {
                         <h6>Password</h6>
                         <input
                             type="password"
+                            fullWidth
                             placeholder="Enter your password"
                             name="password"
                             value={values.password}
@@ -95,6 +95,7 @@ function Login() {
                         <h6>Name</h6>
                         <input
                             type="text"
+                            fullWidth
                             placeholder="Enter your name"
                             name="name"
                             value={values.name}
@@ -104,6 +105,7 @@ function Login() {
                         {touched.name && errors.name ? <div className="error">{errors.name}</div> : null}
                         <h6>Email</h6>
                         <input
+                            fullWidth
                             type="email"
                             placeholder="Enter your email"
                             name="email"
@@ -115,6 +117,7 @@ function Login() {
                         <h6>Password</h6>
                         <input
                             type="password"
+                            fullWidth
                             placeholder="Enter your password"
                             name="password"
                             value={values.password}
@@ -130,6 +133,7 @@ function Login() {
                     <>
                         <h6>Email</h6>
                         <input
+                            fullWidth
                             type="email"
                             placeholder="Enter your email"
                             name="email"
