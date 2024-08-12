@@ -1,203 +1,183 @@
 import React, { useState } from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Button, TextField, Typography, Box, Container, Paper } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { register } from '../../../redux/reducer/slice/login.slice';
 
-const validationSchemas = {
-    login: Yup.object({
-        email: Yup.string()
-            .email('Invalid email address')
-            .required('Email is required'),
-        password: Yup.string()
-            .min(6, 'Password must be at least 6 characters')
-            .required('Password is required'),
-    }),
-    signup: Yup.object({
-        email: Yup.string()
-            .email('Invalid email address')
-            .required('Email is required'),
-        password: Yup.string()
-            .min(6, 'Password must be at least 6 characters')
-            .required('Password is required'),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
-            .required('Confirm Password is required'),
-    }),
-    forgot: Yup.object({
-        email: Yup.string()
-            .email('Invalid email address')
-            .required('Email is required'),
-    }),
-};
+function Login() {
+    const [view, setView] = useState('login');
+    const dispatch = useDispatch();
 
-const Login = () => {
-    const [form, setForm] = useState('login'); 
-
-    const handleSubmit = (values, { setSubmitting }) => {
-        // Handle form submission here
-        console.log('Form submitted:', values);
-        setSubmitting(false);
+    const getValidationSchema = () => {
+        switch (view) {
+            case 'login':
+                return Yup.object({
+                    email: Yup.string()
+                        .email('Invalid email address')
+                        .required('Email is required'),
+                    password: Yup.string()
+                        .required('Password is required')
+                        .min(6, 'Password must be at least 6 characters'),
+                });
+            case 'signUp':
+                return Yup.object({
+                    name: Yup.string().required('Name is required'),
+                    email: Yup.string()
+                        .email('Invalid email address')
+                        .required('Email is required'),
+                    password: Yup.string()
+                        .required('Password is required')
+                        .min(6, 'Password must be at least 6 characters'),
+                });
+            case 'forgotPassword':
+                return Yup.object({
+                    email: Yup.string()
+                        .email('Invalid email address')
+                        .required('Email is required'),
+                });
+            default:
+                return Yup.object({});
+        }
     };
 
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+            name: ''
+        },
+        validationSchema: getValidationSchema(),
+        onSubmit: values => {
+            if (view === 'signUp') {
+                dispatch(register({ ...values, role: 'user' }));
+            }
+
+        },
+    });
+
+    const { handleChange, handleBlur, handleSubmit, values, touched, errors } = formik;
+
     const renderForm = () => {
-        switch (form) {
-            case 'signup':
+        switch (view) {
+            case 'login':
                 return (
-                    <Formik
-                        initialValues={{ email: '', password: '', confirmPassword: '' }}
-                        validationSchema={validationSchemas.signup}
-                        onSubmit={handleSubmit}
-                    >
-                        {({ isSubmitting }) => (
-                            <Form>
-                                <Typography variant="h5" gutterBottom>Sign Up</Typography>
-                                <Box mb={2}>
-                                    <Field
-                                        name="email"
-                                        as={TextField}
-                                        label="Email"
-                                        fullWidth
-                                        variant="outlined"
-                                        helperText={<ErrorMessage name="email" />}
-                                        error={Boolean(<ErrorMessage name="email" />)}
-                                    />
-                                </Box>
-                                <Box mb={2}>
-                                    <Field
-                                        name="password"
-                                        as={TextField}
-                                        type="password"
-                                        label="Password"
-                                        fullWidth
-                                        variant="outlined"
-                                        helperText={<ErrorMessage name="password" />}
-                                        error={Boolean(<ErrorMessage name="password" />)}
-                                    />
-                                </Box>
-                                <Box mb={2}>
-                                    <Field
-                                        name="confirmPassword"
-                                        as={TextField}
-                                        type="password"
-                                        label="Confirm Password"
-                                        fullWidth
-                                        variant="outlined"
-                                        helperText={<ErrorMessage name="confirmPassword" />}
-                                        error={Boolean(<ErrorMessage name="confirmPassword" />)}
-                                    />
-                                </Box>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={isSubmitting}
-                                    fullWidth
-                                >
-                                    Sign Up
-                                </Button>
-                            </Form>
-                        )}
-                    </Formik>
+                    <>
+                        <h6>Email</h6>
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            name="email"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.email && errors.email ? <div className="error">{errors.email}</div> : null}
+                        <h6>Password</h6>
+                        <input
+                            type="password"
+                            placeholder="Enter your password"
+                            name="password"
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.password && errors.password ? <div className="error">{errors.password}</div> : null}
+                        <button type="submit" className="btn btn-primary w-100 mt-4">Login</button>
+                    </>
                 );
-
-            case 'forgot':
+            case 'signUp':
                 return (
-                    <Formik
-                        initialValues={{ email: '' }}
-                        validationSchema={validationSchemas.forgot}
-                        onSubmit={handleSubmit}
-                    >
-                        {({ isSubmitting }) => (
-                            <Form>
-                                <Typography variant="h5" gutterBottom>Forgot Password</Typography>
-                                <Box mb={2}>
-                                    <Field
-                                        name="email"
-                                        as={TextField}
-                                        label="Email"
-                                        fullWidth
-                                        variant="outlined"
-                                        helperText={<ErrorMessage name="email" />}
-                                        error={Boolean(<ErrorMessage name="email" />)}
-                                    />
-                                </Box>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={isSubmitting}
-                                    fullWidth
-                                >
-                                    Send Reset Link
-                                </Button>
-                            </Form>
-                        )}
-                    </Formik>
+                    <>
+                        <h6>Name</h6>
+                        <input
+                            type="text"
+                            placeholder="Enter your name"
+                            name="name"
+                            value={values.name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.name && errors.name ? <div className="error">{errors.name}</div> : null}
+                        <h6>Email</h6>
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            name="email"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.email && errors.email ? <div className="error">{errors.email}</div> : null}
+                        <h6>Password</h6>
+                        <input
+                            type="password"
+                            placeholder="Enter your password"
+                            name="password"
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.password && errors.password ? <div className="error">{errors.password}</div> : null}
+                        <button type="submit" className="btn btn-primary w-100 mt-4">Sign Up</button>
+                    </>
                 );
-
+            case 'forgotPassword':
+                return (
+                    <>
+                        <h6>Email</h6>
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            name="email"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.email && errors.email ? <div className="error">{errors.email}</div> : null}
+                        <button type="submit" className="btn btn-primary w-100 mt-4">Reset Password</button>
+                    </>
+                );
             default:
-                return (
-                    <Formik
-                        initialValues={{ email: '', password: '' }}
-                        validationSchema={validationSchemas.login}
-                        onSubmit={handleSubmit}
-                    >
-                        {({ isSubmitting }) => (
-                            <Form>
-                                <Typography variant="h5" gutterBottom>Login</Typography>
-                                <Box mb={2}>
-                                    <Field
-                                        name="email"
-                                        as={TextField}
-                                        label="Email"
-                                        fullWidth
-                                        variant="outlined"
-                                        helperText={<ErrorMessage name="email" />}
-                                        error={Boolean(<ErrorMessage name="email" />)}
-                                    />
-                                </Box>
-                                <Box mb={2}>
-                                    <Field
-                                        name="password"
-                                        as={TextField}
-                                        type="password"
-                                        label="Password"
-                                        fullWidth
-                                        variant="outlined"
-                                        helperText={<ErrorMessage name="password" />}
-                                        error={Boolean(<ErrorMessage name="password" />)}
-                                    />
-                                </Box>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={isSubmitting}
-                                    fullWidth
-                                >
-                                    Login
-                                </Button>
-                            </Form>
-                        )}
-                    </Formik>
-                );
+                return null;
         }
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
-                <Paper elevation={3} sx={{ padding: 4, borderRadius: 2, width: '100%' }}>
-                    {renderForm()}
-                    <Box mt={2} display="flex" >
-                        <Button onClick={() => setForm('login')}>Login</Button>
-                        <Button onClick={() => setForm('signup')} >Sign Up</Button>
-                        <Button onClick={() => setForm('forgot')} >Forgot Password</Button>
-                    </Box>
-                </Paper>
-            </Box>
-        </Container>
+        <div className="container">
+            <div className="row justify-content-center mt-5">
+                <div className="col-md-6">
+                    <div className="card shadow">
+                        <div className="card-body">
+                            <h2 className="text-center mb-4">
+                                {view === 'login' ? 'Login' : view === 'signUp' ? 'Sign Up' : 'Forgot Password'}
+                            </h2>
+                            <form onSubmit={handleSubmit}>
+                                {renderForm()}
+                            </form>
+                            <div className="text-center mt-3">
+                                {view === 'login' && (
+                                    <>
+                                        <button className="btn btn-link" onClick={() => setView('signUp')}>Sign Up</button>
+                                        <button className="btn btn-link" onClick={() => setView('forgotPassword')}>Forgot Password?</button>
+                                    </>
+                                )}
+                                {view === 'signUp' && (
+                                    <>
+                                        <button className="btn btn-link" onClick={() => setView('login')}>Login</button>
+                                    </>
+                                )}
+                                {view === 'forgotPassword' && (
+                                    <>
+                                        <button className="btn btn-link" onClick={() => setView('login')}>Back to Login</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
-};
+}
 
 export default Login;

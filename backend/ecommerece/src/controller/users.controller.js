@@ -8,7 +8,7 @@ const AccRefToken = async (id) => {
     try {
         const user = await Users.findById(id);
         console.log("juhivbndfikjvn", user);
-      
+
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -42,7 +42,7 @@ const AccRefToken = async (id) => {
 const register = async (req, res) => {
     try {
         console.log(req.body);
-        console.log(req.file);
+        // console.log(req.file);
 
         const { email, password } = req.body;
         const user = await Users.findOne(
@@ -66,8 +66,10 @@ const register = async (req, res) => {
             });
         }
 
-        const newdata = await Users.create({ ...req.body, password: hashpassoword, avtar: req.file.path })
-
+        const newdata = await Users.create({ ...req.body, password: hashpassoword })
+        console.log("newdata", newdata);
+        
+        // , avtar: req.file.path 
         if (!newdata) {
             return res.status(500).json({
                 success: false,
@@ -83,7 +85,7 @@ const register = async (req, res) => {
                 message: "internal server erorr.",
             });
         }
-        sendMail();
+        // sendMail();
         res.status(201).json({
             success: true,
             message: "user created successfully.",
@@ -93,7 +95,7 @@ const register = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "internal server erorr.",
+            message: "internal server erorr."+ error.message,
         });
     }
 }

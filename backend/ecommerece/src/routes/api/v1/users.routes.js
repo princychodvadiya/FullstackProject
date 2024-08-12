@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
     '/register',
-    upload.single('avtar'),
+    // upload.single('avtar'),
     controllerUsers.register
 )
 

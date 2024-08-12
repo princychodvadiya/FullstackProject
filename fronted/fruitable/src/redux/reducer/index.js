@@ -11,6 +11,7 @@ import subcategorySlice from "./slice/subcategory.slice";
 import { productReducer } from "./products.reducer";
 import variantsSlice from "./slice/variant.silce";
 import { salespeopleReducer } from "./salespeople.reducer";
+import loginSlice from "./slice/login.slice";
 
 export const rootReducer = combineReducers({
     counter: counterReducer,
@@ -24,5 +25,6 @@ export const rootReducer = combineReducers({
     category: categoryReducer,
     subcategory: subcategorySlice,
     variants: variantsSlice,
-    salespeople: salespeopleReducer
+    salespeople: salespeopleReducer,
+    login:loginSlice
 })
