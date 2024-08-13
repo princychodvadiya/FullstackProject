@@ -39,6 +39,7 @@ function Header(props) {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
+    const { isAuthentication } = useSelector((state) => state.login)
 
     useEffect(() => {
         dispatch(getdata());
@@ -113,9 +114,14 @@ function Header(props) {
                                     <i className="fa fa-shopping-bag fa-2x" />
                                     <span className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style={{ top: '-5px', left: 15, height: 20, minWidth: 20 }}>{cart_quantity}</span>
                                 </NavLink>
-                                <NavLink to="/login" className="my-auto">
-                                    <i className="fas fa-user fa-2x" />
-                                </NavLink>
+                                {
+                                    isAuthentication ?
+                                        <button>logout</button> :
+                                        <NavLink to="/login" className="my-auto">
+                                            <i className="fas fa-user fa-2x" />
+                                        </NavLink>
+                                }
+
                             </div>
                             {
                                 themeContext.theme === 'light' ? <LightModeIcon onClick={ChangeTheme} /> : <DarkModeIcon onClick={ChangeTheme} />

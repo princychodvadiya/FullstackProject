@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login, register } from '../../../redux/reducer/slice/login.slice';
-
+import { Navigate } from "react-router-dom";
 function Login() {
     const [view, setView] = useState('login');
     const dispatch = useDispatch();
+
+    const auth = useSelector((state) => state.login)
+    console.log(auth);
 
     const getValidationSchema = () => {
         switch (view) {
@@ -48,6 +51,7 @@ function Login() {
             name: ''
         },
         validationSchema: getValidationSchema(),
+        enableReinitialize: true,
         onSubmit: values => {
             if (view === 'signUp') {
                 dispatch(register({ ...values, role: 'user' }));
@@ -56,6 +60,10 @@ function Login() {
             }
         },
     });
+
+    if (auth.isAuthentication) {
+        return <Navigate to="/" />
+    }
 
     const { handleChange, handleBlur, handleSubmit, values, touched, errors } = formik;
 
