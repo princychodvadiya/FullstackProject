@@ -229,7 +229,7 @@ const newToken = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        console.log(req.body._id);
+        console.log("fgdg", req.body._id);
         const user = await Users.findByIdAndUpdate(
             req.body._id,
             {
@@ -255,9 +255,7 @@ const logout = async (req, res) => {
             .json({
                 success: true,
                 message: "User Logeed Out."
-
             });
-
     } catch (error) {
         console.error('Logout error:', error.message);
         return res.status(500).json({
