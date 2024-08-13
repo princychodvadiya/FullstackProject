@@ -10,6 +10,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import { getsubcategory } from '../../../redux/reducer/slice/subcategory.slice';
 import { getCategory } from '../../../redux/action/category.action';
 import { getdata } from '../../../redux/action/products.action';
+import { logout } from '../../../redux/reducer/slice/login.slice';
 
 function Header(props) {
     const cart = useSelector(state => state.cart)
@@ -39,7 +40,11 @@ function Header(props) {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
-    const { isAuthentication } = useSelector((state) => state.login)
+    const { isAuthentication, data } = useSelector((state) => state.login)
+
+    const handlelogout = () => {
+        dispatch(logout(data._id))
+    }
 
     useEffect(() => {
         dispatch(getdata());
@@ -116,12 +121,11 @@ function Header(props) {
                                 </NavLink>
                                 {
                                     isAuthentication ?
-                                        <button>logout</button> :
+                                        <button onClick={handlelogout}>logout</button> :
                                         <NavLink to="/login" className="my-auto">
                                             <i className="fas fa-user fa-2x" />
                                         </NavLink>
                                 }
-
                             </div>
                             {
                                 themeContext.theme === 'light' ? <LightModeIcon onClick={ChangeTheme} /> : <DarkModeIcon onClick={ChangeTheme} />
