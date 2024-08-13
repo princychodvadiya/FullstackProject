@@ -65,7 +65,6 @@ export const logout = createAsyncThunk(
             console.log(error);
             return rejectWithValue('logout erorr.' + error.response.data.message)
         }
-
     }
 )
 
@@ -102,11 +101,11 @@ const loginSlice = createSlice({
             state.data = null
         })
         builder.addCase(logout.fulfilled, (state, action) => {
-            state.isAuthentication = true;
+            state.isAuthentication = false;
             state.isLogOut = true;
             state.isLoading = false;
             state.error = null;
-            state.data = action.payload
+            state.data = null
         })
         builder.addCase(logout.rejected, (state, action) => {
             state.isAuthentication = true;

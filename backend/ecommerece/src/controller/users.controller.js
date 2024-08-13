@@ -68,7 +68,7 @@ const register = async (req, res) => {
 
         const newdata = await Users.create({ ...req.body, password: hashpassoword })
         console.log("newdata", newdata);
-        
+
         // , avtar: req.file.path 
         if (!newdata) {
             return res.status(500).json({
@@ -95,7 +95,7 @@ const register = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "internal server erorr."+ error.message,
+            message: "internal server erorr." + error.message,
         });
     }
 }
@@ -173,10 +173,10 @@ const newToken = async (req, res) => {
     // console.log("ok");
     // console.log(req.body);
     try {
-        console.log("hhh", req.cookies.RefreshToken);
+        // console.log("hhh", req.cookies.RefreshToken);
 
         const validateToken = await jwt.verify(req.cookies.RefreshToken, "trrerefsdfdfe")
-        console.log("uuu", validateToken);
+        // console.log("uuu", validateToken);
 
         if (!validateToken) {
             return res.status(401).json({
@@ -186,7 +186,7 @@ const newToken = async (req, res) => {
         }
 
         const user = await Users.findById(validateToken._id)
-        console.log(user, "ajikshd");
+        // console.log(user, "ajikshd");
 
         if (!user) {
             return res.status(404).json({
@@ -194,7 +194,6 @@ const newToken = async (req, res) => {
                 message: "user is not found."
             })
         }
-
 
         const { AccessToken, RefreshToken } = await AccRefToken(user._id);
 
@@ -215,15 +214,15 @@ const newToken = async (req, res) => {
             .cookie("RefreshToken", RefreshToken, option)
             .json({
                 success: true,
-                message: "data fetch succsesfully.",
+                message: "Refresh Token Sucessfully",
                 data: {
-                    user: { AccessToken }
+                    AccessToken
                 }
             })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "internal server erorr.",
+            message: "internal server erorr." + error.message,
         });
     }
 }
@@ -249,11 +248,16 @@ const logout = async (req, res) => {
                 message: 'User not login.'
             });
         }
-        console.log(user);
-        res.status(200).json({
-            success: true,
-            message: 'Logout successful.'
-        })
+
+        res.status(200)
+            .clearCookie("AccessToken")
+            .clearCookie("RefreshToken")
+            .json({
+                success: true,
+                message: "User Logeed Out."
+
+            });
+
     } catch (error) {
         console.error('Logout error:', error.message);
         return res.status(500).json({
