@@ -10,7 +10,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import { getsubcategory } from '../../../redux/reducer/slice/subcategory.slice';
 import { getCategory } from '../../../redux/action/category.action';
 import { getdata } from '../../../redux/action/products.action';
-import { logout } from '../../../redux/reducer/slice/login.slice';
+import { checkAuth, logout } from '../../../redux/reducer/slice/login.slice';
 
 function Header(props) {
     const cart = useSelector(state => state.cart)
@@ -41,8 +41,11 @@ function Header(props) {
     const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
     const { isAuthentication, data } = useSelector((state) => state.login)
+    console.log(isAuthentication,data);
+    
 
     const handlelogout = () => {
+        console.log(data._id);
         dispatch(logout(data._id))
     }
 

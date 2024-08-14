@@ -35,11 +35,16 @@ router.post(
     controllerUsers.newToken
 )
 
+router.get(
+    '/chackAuth',
+    controllerUsers.chackAuth
+)
+
 router.post(
     '/logout',
     controllerUsers.logout
 )
-    
+
 router.get(
     '/googlelogin',
     passport.authenticate('google', { scope: ['profile', 'email'] })

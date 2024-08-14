@@ -17,7 +17,7 @@ const AccRefToken = async (id) => {
         }
 
         const AccessToken = await jwt.sign({
-            _id: user.id,
+            _id: user._id,
             role: user.role,
             expiresIn: 360000
         },
@@ -99,6 +99,7 @@ const register = async (req, res) => {
         });
     }
 }
+
 const registerOTP = async (req, res) => {
     res.status(200).json({
         success: true,
@@ -146,20 +147,26 @@ const login = async (req, res) => {
         // console.log(AccessToken, RefreshToken);
         const newdataf = await Users.findById({ _id: user._id }).select("-password -RefreshToken");
 
-        const option = {
+        const optionAcc = {
             httpOnly: true,
-            secure: true
+            secure: true,
+            maxAge: 360000, // 1 hour
+        }
+
+        const optionRef = {
+            httpOnly: true,
+            secure: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
         }
 
         res.status(200)
-            .cookie("AccessToken", AccessToken, option)
-            .cookie("RefreshToken", RefreshToken, option)
+            .cookie("AccessToken", AccessToken, optionAcc)
+            .cookie("RefreshToken", RefreshToken, optionRef)
             .json({
                 success: true,
                 message: "login succsecfully.",
-                data: {
-                    user: { ...newdataf.toObject(), AccessToken }
-                }
+                data: { ...newdataf.toObject(), AccessToken }
+
             })
     } catch (error) {
         res.status(500).json({
@@ -265,10 +272,47 @@ const logout = async (req, res) => {
     }
 }
 
+const chackAuth = async (req, res) => {
+    try {
+        const AccessToken = await req.cookies.AccessToken
+        console.log(AccessToken);
+
+        if (!AccessToken) {
+            return res.status(400).json({
+                success: false,
+                message: 'Access Token not found.'
+            })
+        }
+
+        const validateUser = await jwt.verify(AccessToken, process.env.ACCESS_TOKEN_KEY)
+        console.log(validateUser);
+
+        if (!validateUser) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid Access Token.'
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            data: validateUser,
+            message: "success"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "internal server erorr." + error.message,
+        });
+    }
+}
+
 module.exports = {
     register,
     login,
     newToken,
     logout,
-    registerOTP, verifyOTP
+    registerOTP, verifyOTP,
+    chackAuth
 }

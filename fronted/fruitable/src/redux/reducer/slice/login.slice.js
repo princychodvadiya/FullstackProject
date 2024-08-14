@@ -35,7 +35,7 @@ export const login = createAsyncThunk(
     'users/login',
     async (data, { rejectWithValue }) => {
         try {
-            console.log(data);
+            console.log("vdfg",data);
             // const response = await axiosInstance.post('http://localhost:8000/api/v1/users/login', data)
             const response = await axiosInstance.post('/users/login', data)
             console.log(response);
@@ -68,6 +68,23 @@ export const logout = createAsyncThunk(
     }
 )
 
+export const checkAuth = createAsyncThunk(
+    'users/chackAuth',
+    async (_, { rejectWithValue }) => {
+        try {
+            // console.log();
+            const response = await axiosInstance.get('/users/chackAuth')
+            console.log(response);
+            if (response.data.success) {
+                return response.data
+            }
+        } catch (error) {
+            console.log(error);
+            return rejectWithValue('checkAuth erorr.' + error.response.data.message)
+        }
+    }
+)
+
 const loginSlice = createSlice({
     name: 'login',
     initialState: initialState,
@@ -91,7 +108,7 @@ const loginSlice = createSlice({
             state.isLogOut = false;
             state.isLoading = false;
             state.error = null;
-            state.data = action.payload
+            state.data = action.payload.data
         })
         builder.addCase(login.rejected, (state, action) => {
             state.isAuthentication = false;
@@ -101,17 +118,29 @@ const loginSlice = createSlice({
             state.data = null
         })
         builder.addCase(logout.fulfilled, (state, action) => {
+            console.log(action.payload);           
             state.isAuthentication = false;
             state.isLogOut = true;
-            state.isLoading = false;
+            state.isLoading = true;
             state.error = null;
-            state.data = null
+            state.data = action.payload;
         })
-        builder.addCase(logout.rejected, (state, action) => {
+       
+        builder.addCase(checkAuth.fulfilled, (state, action) => {
+            console.log(action.payload);
+            
             state.isAuthentication = true;
             state.isLogOut = false;
             state.isLoading = false;
+            state.error = null;
+            state.data = action.payload.data
+        })
+        builder.addCase(checkAuth.rejected, (state, action) => {
+            state.isAuthentication = false;
+            state.isLogOut = true;
+            state.isLoading = false;
             state.error = action.payload;
+            state.data = null
         })
     }
 })
