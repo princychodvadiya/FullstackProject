@@ -19,9 +19,9 @@ function Shop(props) {
     const shop = useSelector(state => state.shop)
     // console.log(shop);
 
-    useEffect(() => {
-        dispatch(getFruits());
-    }, [])
+    // useEffect(() => {
+    //     dispatch(getFruits());
+    // }, [])
 
     const getdata = async () => {
         const response = await fetch("http://localhost:8000/fruits");
@@ -48,9 +48,9 @@ function Shop(props) {
         dispatch(AddcartSlice({ id, count: 1 }));
     }
 
-    useEffect(() => {
-        dispatch(getdata());
-    }, []);
+    // useEffect(() => {
+    //     dispatch(getdata());
+    // }, []);
 
     return (
         <div>

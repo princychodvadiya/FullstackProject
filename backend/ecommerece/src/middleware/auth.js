@@ -6,7 +6,7 @@ const auth = (roles = []) => async (req, res, next) => {
         const token = req.cookies.AccessToken || req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
                 message: "token is require."
             })

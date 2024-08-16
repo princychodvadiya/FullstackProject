@@ -35,12 +35,20 @@ export const login = createAsyncThunk(
     'users/login',
     async (data, { rejectWithValue }) => {
         try {
-            console.log("vdfg",data);
+            console.log("vdfg", data);
             // const response = await axiosInstance.post('http://localhost:8000/api/v1/users/login', data)
-            const response = await axiosInstance.post('/users/login', data)
+            const response = await axiosInstance.post('/users/login', data);
             console.log(response);
 
+            // if (response.status === 200) {
+            //     return response.data
+            // }
+
             if (response.status === 200) {
+                console.log("ikjhdnv");
+                
+                localStorage.setItem("_id", response.data.data._id)
+                console.log(response.data.data._id);
                 return response.data
             }
         } catch (error) {
@@ -118,17 +126,17 @@ const loginSlice = createSlice({
             state.data = null
         })
         builder.addCase(logout.fulfilled, (state, action) => {
-            console.log(action.payload);           
+            console.log(action.payload);
             state.isAuthentication = false;
             state.isLogOut = true;
             state.isLoading = true;
             state.error = null;
             state.data = action.payload;
         })
-       
+
         builder.addCase(checkAuth.fulfilled, (state, action) => {
             console.log(action.payload);
-            
+
             state.isAuthentication = true;
             state.isLogOut = false;
             state.isLoading = false;

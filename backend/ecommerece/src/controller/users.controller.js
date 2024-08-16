@@ -278,7 +278,7 @@ const chackAuth = async (req, res) => {
         console.log(AccessToken);
 
         if (!AccessToken) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
                 message: 'Access Token not found.'
             })
