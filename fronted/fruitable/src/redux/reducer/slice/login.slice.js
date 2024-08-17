@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios";
 import axiosInstance from "../../../utils/axiosinstance";
+import { setAlert } from "./alert.silce";
 
 const initialState = {
     isAuthentication: false,
@@ -33,7 +34,7 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
     'users/login',
-    async (data, { rejectWithValue }) => {
+    async (data, { dispatch, rejectWithValue }) => {
         try {
             console.log("vdfg", data);
             // const response = await axiosInstance.post('http://localhost:8000/api/v1/users/login', data)
@@ -46,9 +47,11 @@ export const login = createAsyncThunk(
 
             if (response.status === 200) {
                 console.log("ikjhdnv");
-                
+
                 localStorage.setItem("_id", response.data.data._id)
                 console.log(response.data.data._id);
+                dispatch(setAlert({color:'success',message:response.data.message}))
+
                 return response.data
             }
         } catch (error) {

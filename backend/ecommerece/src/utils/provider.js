@@ -1,6 +1,6 @@
 const passport = require('passport');
 const Users = require('../model/users.model');
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 
 const googleLoginProvider = async () => {
@@ -39,15 +39,28 @@ const googleLoginProvider = async () => {
 
         passport.serializeUser(function (user, done) {
             console.log("serializeUser", user);
-            done(null, user.id);
+            done(null, user);
         });
 
         passport.deserializeUser(async function (id, done) {
             console.log("deserializeUser", id);
+            try {
+                let user = await Users.findById(id)
+               console.log(user);
+               
+                if(!user){
+                    return done(error, null);
+                    
+                }
+                done(null, user)
+            } catch (error) {
+                done(error, null);
+            }
             // await Users.findById(id, function (err, user) {
-            // done(err, user);
+
             // });
-            let user = await Users.findOne({ _id: id });
+
+            // let user = await Users.findOne({ _id: id });
         });
     } catch (error) {
         console.log(error);

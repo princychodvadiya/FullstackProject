@@ -66,14 +66,19 @@ function Login(props) {
 
     let { handleSubmit, handleChange, handleBlur, touched, errors, values } = formikObj;
 
-    console.log(authSchema);
+    // console.log(authSchema);
 
-    console.log(initialVal);
+    // console.log(initialVal);
 
 
     if (auth.isAuthentication) {
         return <Navigate to="/" />
     }
+
+    const haldleGoogleLogin = () => {
+        window.location.href = "http://localhost:8000/api/v1/users/googlelogin"
+    }
+
     console.log(errors, touched);
     return (
         <div>
@@ -165,6 +170,7 @@ function Login(props) {
                         </div>
                         <button type="submit" className="btn btn-primary">Submit</button>
                     </form>
+                    <button onClick={haldleGoogleLogin}>sign in with google</button>
                 </div>
             </div>
         </div>

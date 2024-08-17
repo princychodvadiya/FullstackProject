@@ -309,6 +309,7 @@ const chackAuth = async (req, res) => {
 }
 
 module.exports = {
+    AccRefToken,
     register,
     login,
     newToken,

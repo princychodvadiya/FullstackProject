@@ -4,6 +4,7 @@ const passport = require('passport');
 const exportpdfmake = require('../../../utils/pdfmake');
 const { sendOTP, verifyOTP } = require('../../../utils/twilioOTP');
 const upload = require('../../../middleware/upload');
+const { AccRefToken } = require('../../../controller/users.controller');
 
 const router = express.Router();
 
@@ -53,10 +54,38 @@ router.get(
 router.get(
     '/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
-    function (req, res) {
+    async function (req, res) {
+
         console.log("Successful");
+        console.log(req.isAuthenticated());
+        console.log(req.session);
+        console.log("iojoihn");
         // Successful authentication, redirect home.
-        res.send('<h1>ok</h1>');
+        // res.send('<h1>ok</h1>');
+        if (req.isAuthenticated()) {
+
+            const { AccessToken, RefreshToken } = await AccRefToken(req.session.passport.user._id);
+            console.log(AccessToken, RefreshToken);
+
+            // const newdataf = await Users.findById({ _id: user._id }).select("-password -RefreshToken");
+
+            const optionAcc = {
+                httpOnly: true,
+                secure: true,
+                maxAge: 360000, // 1 hour
+            }
+
+            const optionRef = {
+                httpOnly: true,
+                secure: true,
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+            }
+
+            return res.status(200)
+                .cookie("AccessToken", AccessToken, optionAcc)
+                .cookie("RefreshToken", RefreshToken, optionRef)
+                .redirect("http://localhost:3000/")
+        }
     });
 
 router.get(
